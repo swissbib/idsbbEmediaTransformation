@@ -2,7 +2,7 @@
 -- mysql --host=ub-filesvm.ub.unibas.ch --user=admin -p --execute="source create-e_swissbib-table.sql"
 -- 13.05.2016/ava
 
-USE e_swissbib_test;
+USE e_swissbib;
 
 DROP TABLE IF EXISTS emedia;
 

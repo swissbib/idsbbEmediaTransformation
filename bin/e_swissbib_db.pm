@@ -5,7 +5,9 @@ use DBI;
 use strict;
 
 my $DBHOST     = 'localhost';
+#my $DBHOST     = 'ub-filesvm';
 my $DB_NAME    = 'e_swissbib_test';
+#my $DB_NAME    = 'e_swissbib';
 my $DBUSER     = 'e_swissbib_staff';
 my $DBPASSWORD = 'x0vA82';
 

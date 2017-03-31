@@ -1,11 +1,11 @@
-#!/usr/bin/perl 
+#!/usr/bin/perl
 =head1 NAME
 
-sync-deltas-with-local-db_test.pl
+sync-deltas-with-local-db.pl
 
 =head1 SYNOPSIS
 
- perl sync-deltas-with-local-db_test.pl
+ perl sync-deltas-with-local-db.pl
 
 =head1 DESCRIPTION
 
@@ -43,7 +43,7 @@ binmode(STDOUT,":utf8");
 use strict;
 use utf8;
 use lib $FindBin::Bin;
-use e_swissbib_db_test;
+use e_swissbib_db;
 
 # ---------------------------
 # input data sets
@@ -63,9 +63,11 @@ my @Sets = (
 my($DATA_DIR,$DOWNLOAD_DIR);
 $DATA_DIR       = '/opt/data/e-books_test/data';
 $DOWNLOAD_DIR   = '/opt/data/e-books_test/download';
+#$DATA_DIR       = '/opt/data/e-books/data';
+#$DOWNLOAD_DIR   = '/opt/data/e-books/download';
 chdir $DOWNLOAD_DIR
     or die( "$0: cannot chdir to $DOWNLOAD_DIR: $!\n");
-my $STATS = $DATA_DIR .'/statistik_test.txt';    
+my $STATS = $DATA_DIR .'/statistik.txt';
 my $stats;
 
 # ---------------------------

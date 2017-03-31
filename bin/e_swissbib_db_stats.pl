@@ -7,6 +7,7 @@ e_swissbib_db_stats.pl
 
 history
     10.06.2016 beta / ava
+    31.03.2017 Anpassung für E-Zeitschriften / bmt
  
 =cut
 
@@ -19,7 +20,7 @@ binmode(STDOUT,":utf8");
 use strict;
 use utf8;
 use lib $FindBin::Bin;
-use e_swissbib_db_test;
+use e_swissbib_db;
 
 # ---------------------------
 # input data sets
@@ -37,7 +38,8 @@ my @Sets = (
 # local files and dirs
 # ---------------------------
 my $DATA_DIR = '/opt/data/e-books_test/data';
-my $STATS = $DATA_DIR .'/shadow_statistik_test.txt';
+#my $DATA_DIR = '/opt/data/e-books/data';
+my $STATS = $DATA_DIR .'/shadow_statistik.txt';
 open(F,">$STATS") or die "cannot append to $STATS: $!";
 
 # ---------------------------

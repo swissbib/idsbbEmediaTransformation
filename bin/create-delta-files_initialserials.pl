@@ -12,7 +12,7 @@ create-delta-files_initialserials.pl
 
 This script creates MARCXML-records of all Serial records in the shadow
 database for the initial load of free serial records into Swissbib
-It does not write a deletion list. 
+It does not write a deletion list.
 
 =head2 Data sources
 
@@ -31,7 +31,7 @@ files.
 
 =item sersol-idsbb-emedia-updates.xml
 
-MARC21 XML file for import into Swissbib. 
+MARC21 XML file for import into Swissbib.
 Must be reformatted, gzipped and uploaded to Swissbib host.
 
 =item sersol-idsbb-emedia-deletions.txt
@@ -42,8 +42,8 @@ List of IDSs to be deleted. Note: first line contains date stamp
 
 B<Step 2:>The program iterates over basel-bern-emedia.xml. It checks
 the records ID against the emedia table. It will set the MARC flag
-for the record and output the record to sersol-idsbb-emedia-updates.xml 
-if one of two conditions are met: (1) The I<modified> field is set to 
+for the record and output the record to sersol-idsbb-emedia-updates.xml
+if one of two conditions are met: (1) The I<modified> field is set to
 the current date, signaling a recent addition, update or deletion.
 (2) The MARC flag is not set, signaling that the record has been
 reported as addition in an earlier run but the MARC record has not
@@ -55,7 +55,7 @@ been delivered.
 
 =head2 CAVEAT
 
-ProQuest/SerialSolutions produces the 360MARC data and the lists for 
+ProQuest/SerialSolutions produces the 360MARC data and the lists for
 new/changed/deleted records asynchronously. Therefore it is possible
 the recourds will be reported as new B<before> the 360MARC record
 has been delivered. - The MARC flag in the local DB table is used to
@@ -72,7 +72,6 @@ basil.marti@unibas.ch
  02.03.2017 Testversion / bmt
  09.03.2017 Erweiterung für freie E-Zeitschriften / bmt
  13.03.2017 Anpassung für Erstladen freie Zeitschriften
- 
 =cut
 
 use DBI;
@@ -90,12 +89,12 @@ binmode(STDOUT,":utf8");
 use strict;
 use utf8;
 use lib $FindBin::Bin;
-use e_swissbib_db_test;
+use e_swissbib_db;
 
 # ---------------------------
 # input data sets
 # ---------------------------
-my @Sets = ( 
+my @Sets = (
     'SFREE',
 );
 
@@ -106,6 +105,8 @@ my $FULL_XML    = 'basel-bern-emedia.xml';
 my $DELTA_XML   = 'sersol-idsbb-emedia-initialserials.xml';
 my $DATA_DIR    = '/opt/data/e-books_test/data';
 my $DOWNLOAD_DIR= '/opt/data/e-books_test/download';
+#my $DATA_DIR    = '/opt/data/e-books/data';
+#my $DOWNLOAD_DIR= '/opt/data/e-books/download';
 
 chdir $DATA_DIR
     or die( "$0: cannot chdir to $DATA_DIR: $!\n");
@@ -123,7 +124,7 @@ sub step_2_write_delta_xml {
     my $marcOut  = MARC::File::XML->out($DELTA_XML);
     my $sth_query = $dbh->prepare(qq|select * from emedia where ssid=? and HolSFREE=1|);
     my $sth_update= $dbh->prepare(qq|update emedia set MARC=1 where ssid=? and HolSFREE=1|);
-   
+
     while ( my $rec = $marcIn->next ) {
         my $id = $rec->field('001')->data;
         $sth_query->bind_param(1,$id);

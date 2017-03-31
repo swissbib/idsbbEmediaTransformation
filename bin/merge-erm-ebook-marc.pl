@@ -2,11 +2,11 @@
 
 =head1 NAME
 
-merge-erm-ebook-marc_test.pl - merge holdings and links from 360MARC data files
+merge-erm-ebook-marc.pl - merge holdings and links from 360MARC data files
 
 =head1 SYNOPSIS
 
- perl merge-erm-ebook-marc_test.pl
+ perl merge-erm-ebook-marc.pl
 
 =head1 DESCRIPTION
 
@@ -101,11 +101,12 @@ my @Sets = (
 # local files and dirs
 # ---------------------------
 my $DATA_DIR = '/opt/data/e-books_test/data';
+#my $DATA_DIR = '/opt/data/e-books/data';
 
 chdir $DATA_DIR
     or die( "$0: cannot chdir to $DATA_DIR: $!\n");
 my $OUTPUT_XML  = 'tmp.xml';
-my $STATS = 'statistik_test.txt';
+my $STATS = 'statistik.txt';
 my $stats;
 my %input_files;
 foreach my $set ( @Sets ) {

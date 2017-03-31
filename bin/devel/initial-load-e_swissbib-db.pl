@@ -37,7 +37,7 @@ use POSIX qw(strftime);
 use Sys::Hostname;
 binmode(STDOUT,":utf8");
 use lib '..';
-use e_swissbib_db_test;
+use e_swissbib_db;
 use strict;
 
 my $host = which_db_host();
@@ -49,8 +49,8 @@ source: basel-bern-emedia.xml
 
 EOD
 print "komplett neu aufbauen [j/N] ? ";
-#my $ans = <STDIN>;
-#exit unless $ans =~ /j/i;
+my $ans = <STDIN>;
+exit unless $ans =~ /j/i;
 
 my $PACIF = 500;
 my $pacif = $PACIF;
@@ -61,6 +61,7 @@ print strftime("START: %Y-%m-%d %H:%M:%S\n",localtime);
 my $XML;
 if ( hostname eq 'ub-catmandu' ) {
     $XML='/opt/data/e-books_test/data/basel-bern-emedia.xml';
+    #$XML='/opt/data/e-books/data/basel-bern-emedia.xml';
 } else {
     $XML = '../../data/basel-bern-emedia.xml';
 }

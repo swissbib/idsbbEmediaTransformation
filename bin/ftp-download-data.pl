@@ -2,7 +2,7 @@
 
 =for doku
 
-ftp-download-data_test.pl 
+ftp-download-data.pl 
 
 Das Skript holt die aktuellen E-Book-MARC-Dateien als Zipfiles
 per FTP von Serial Solutions.
@@ -21,9 +21,7 @@ CAVEAT:
 History
     2016.06.08  rewrite fuer merge und delta/ava
     2016.10.12  added FREE instance/ava
-
-TODO
-    Ausweiten auf Serials
+    2017.03.31  added support for serial
 
 Autor
     andres.vonarx@unibas.ch
@@ -77,6 +75,8 @@ my $downloads = {
 my($DATA_DIR,$DOWNLOAD_DIR);
 $DATA_DIR       = '/opt/data/e-books_test/data';
 $DOWNLOAD_DIR   = '/opt/data/e-books_test/download';
+#$DATA_DIR       = '/opt/data/e-books/data';
+#$DOWNLOAD_DIR   = '/opt/data/e-books/download';
 chdir $DOWNLOAD_DIR
     or die( "$0: cannot chdir to $DOWNLOAD_DIR: $!\n");
 my $MONO_RUN_SUMMARY = $DATA_DIR .'/RunSummary-Mono.txt';

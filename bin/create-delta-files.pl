@@ -2,11 +2,11 @@
 
 =head1 NAME
 
-create-delta-files_test.pl
+create-delta-files.pl
 
 =head1 SYNOPSIS
 
- perl create-delta-files_test.pl
+ perl create-delta-files.pl
 
 =head1 DESCRIPTION
 
@@ -94,7 +94,7 @@ binmode(STDOUT,":utf8");
 use strict;
 use utf8;
 use lib $FindBin::Bin;
-use e_swissbib_db_test;
+use e_swissbib_db;
 
 # ---------------------------
 # input data sets
@@ -116,6 +116,8 @@ my $DELTA_XML   = 'sersol-idsbb-emedia-updates.xml';
 my $DELETIONS   = 'sersol-idsbb-emedia-deletions.txt';
 my $DATA_DIR    = '/opt/data/e-books_test/data';
 my $DOWNLOAD_DIR= '/opt/data/e-books_test/download';
+#my $DATA_DIR    = '/opt/data/e-books/data';
+#my $DOWNLOAD_DIR= '/opt/data/e-books/download';
 
 chdir $DATA_DIR
     or die( "$0: cannot chdir to $DATA_DIR: $!\n");
@@ -198,7 +200,7 @@ sub step_2_write_delta_xml {
                 if ($field->subfield( 'b' ) eq 'A145') {
                     $field->add_subfields( 'x' => "NELA145$neltime" )
                 }
-            } 
+            }
             elsif ( $nelb405 ) {
                 if ($field->subfield( 'b' ) eq 'B405') {
                     $field->add_subfields( 'x' => "NELB405$neltime" )
@@ -221,7 +223,7 @@ sub step_2_write_delta_xml {
             }
             push(@newfields,$field);
         }
-        
+
         $rec->delete_fields(@oldfields);
         $rec->append_fields(@newfields);
         $marcOut->write($rec);
@@ -229,18 +231,12 @@ sub step_2_write_delta_xml {
 
     $marcIn->close;
     $marcOut->close;
-    
+
     foreach my $set ( sort @Sets ) {
         my $sth_nela_remove  = $dbh->prepare(qq|update emedia set Hol$set=1 where Hol$set=2|);
         $sth_nela_remove->execute;
     }
-    
+
     print "delta: done\n";
 }
 
-# ---------------------------
-sub step_3_write_nela  {
-# ---------------------------
-    print "delta: adding nela codes\n";
-    
-}
