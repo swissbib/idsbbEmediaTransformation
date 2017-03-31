@@ -2,7 +2,7 @@
 
 =for doku
 
-ftp-download-data.pl 
+ftp-download-data_test.pl 
 
 Das Skript holt die aktuellen E-Book-MARC-Dateien als Zipfiles
 per FTP von Serial Solutions.
@@ -27,6 +27,7 @@ TODO
 
 Autor
     andres.vonarx@unibas.ch
+    basil.marti@unibas.ch
   
 =cut
 
@@ -55,6 +56,9 @@ my $downloads = {
         EHB  => 'EH1_360MARC_Update_mono.zip',
         FREE => '3UB_360MARC_Update_mono.zip',
         },
+    ser_full => {
+        SFREE  => '3UB_360MARC_Update_ser.zip',
+        },
     mono_delta => {
         BE   => '1UB_360MARC_Update_new_changed_deleted_files.zip',
         BS   => '2UB_360MARC_Update_new_changed_deleted_files.zip',
@@ -62,17 +66,21 @@ my $downloads = {
         EHB  => 'EH1_360MARC_Update_new_changed_deleted_files.zip',
         FREE => '3UB_360MARC_Update_mono_new_changed_deleted_files.zip',
         },
+    ser_delta => {
+        SFREE => '3UB_360MARC_Update_ser_new_changed_deleted_files.zip',
+        },
 };
 
 # ---------------------------
 # local files and dirs
 # ---------------------------
 my($DATA_DIR,$DOWNLOAD_DIR);
-$DATA_DIR       = '/opt/data/e-books/data';
-$DOWNLOAD_DIR   = '/opt/data/e-books/download';
+$DATA_DIR       = '/opt/data/e-books_test/data';
+$DOWNLOAD_DIR   = '/opt/data/e-books_test/download';
 chdir $DOWNLOAD_DIR
     or die( "$0: cannot chdir to $DOWNLOAD_DIR: $!\n");
 my $MONO_RUN_SUMMARY = $DATA_DIR .'/RunSummary-Mono.txt';
+my $SER_RUN_SUMMARY = $DATA_DIR .'/RunSummary-Ser.txt';
 
 # ------------------------------------------------------
 # main program
@@ -84,6 +92,8 @@ ftp_download();
 check_download();
 extract_mono_full();
 extract_mono_delta();
+extract_ser_full();
+extract_ser_delta();
 
 # ------------------------------------------------------
 sub delete_old_files_and_dirs {
@@ -120,7 +130,7 @@ sub ftp_download {
         # --- mono
         $ftp->cwd('360MARC-Monographs')
             or ftp_abort("cannot change directory");
-            
+        
         # --- mono metadata combined ---
         my @list = $ftp->ls
             or ftp_abort("cannot list directory");
@@ -145,9 +155,49 @@ sub ftp_download {
             $ftp->get($zipfile)
                or ftp_abort("cannot get $zipfile");
         }
+       
         $ftp->quit;
     }
+
+    foreach my $credentials ( $bs ) {
+        my $ftp = Net::FTP->new( $ftp_host, Passive => 1)
+            or die("cannot connect to $ftp_host. $@");
+        $ftp->login(@$credentials)
+            or ftp_abort("cannot login");
+
+        # --- ser
+        $ftp->cwd('360MARC-Serials')
+            or ftp_abort("cannot change directory");
+
+        # --- ser metadata combined ---
+        my @list = $ftp->ls
+            or ftp_abort("cannot list directory");
+        while ( @list ) {
+            my $zipfile = shift @list;
+            next unless ($zipfile =~ /\.zip$/ );
+            say "ftp: downloading $zipfile...\n";
+            $ftp->binary;
+            $ftp->get($zipfile)
+               or ftp_abort("cannot get $zipfile");
+        }
+        # --- ser metadata delta ---
+        $ftp->cwd('New_Changed_Deleted')
+            or ftp_abort("cannot change directory");
+        @list = $ftp->ls
+            or ftp_abort("cannot list directory");
+        while ( @list ) {
+            my $zipfile = shift @list;
+            next unless ($zipfile =~ /\.zip$/ );
+            say "ftp: downloading $zipfile...\n";
+            $ftp->binary;
+            $ftp->get($zipfile)
+               or ftp_abort("cannot get $zipfile");
+        }
+
+        $ftp->quit;
+     }
 }
+
 sub ftp_abort {
     my $msg = "FTP ERROR: " .$_[0] .". " . $ftp->message;
     $ftp->quit;
@@ -161,6 +211,8 @@ sub check_download {
     my @expected_ftp_files = ( 
         values(%{$downloads->{mono_full}}), 
         values(%{$downloads->{mono_delta}}),
+        values(%{$downloads->{ser_full}}), 
+        values(%{$downloads->{ser_delta}}),
         );
     foreach my $file ( @expected_ftp_files ) {
         if ( ! -f $file ) {
@@ -176,15 +228,17 @@ sub extract_mono_full {
     say "ftp: extracting monographs full\n";
     unlink $MONO_RUN_SUMMARY;
     unlink 'RunSummary.txt';
-    
-    foreach my $lib ( keys $downloads->{mono_full} ) {
+
+    my @lib = keys $downloads->{mono_full};
+ 
+    foreach my $lib ( @lib ) {
         my @zip = glob( $downloads->{mono_full}->{$lib} );
         my $zip = $zip[0];
         my $prefix = $zip;
         $prefix =~ s/_.*$//;
         my $mono_zip = $prefix ."_360MARC_Update_mono_monographs.zip";
         my $mono_mrc = $prefix ."_360MARC_Update_mono_monographs_new.mrc";
-        my $target_mrc = $DATA_DIR .'/mono-' .$lib .'.mrc';
+        my $target_mrc = $DATA_DIR .'/' .$lib .'.mrc';
         my $cmds=<<EOD;
 unzip -qq $zip $mono_zip RunSummary.txt
 echo '--------------------------------------------' >> $MONO_RUN_SUMMARY
@@ -205,13 +259,53 @@ EOD
 }   
 
 # ------------------------------------------------------
+sub extract_ser_full {
+# ------------------------------------------------------
+    say "ftp: extracting serials full\n";
+    unlink $SER_RUN_SUMMARY;
+    unlink 'RunSummary.txt';
+
+    my @lib = keys $downloads->{ser_full};
+ 
+    foreach my $lib ( @lib ) {
+        my @zip = glob( $downloads->{ser_full}->{$lib} );
+        my $zip = $zip[0];
+        my $prefix = $zip;
+        $prefix =~ s/_.*$//;
+        my $ser_zip = $prefix ."_360MARC_Update_ser_serials.zip";
+        my $ser_mrc = $prefix ."_360MARC_Update_ser_serials_new.mrc";
+        my $target_mrc = $DATA_DIR .'/' .$lib .'.mrc';
+        my $cmds=<<EOD;
+unzip -qq $zip $ser_zip RunSummary.txt
+echo '--------------------------------------------' >> $SER_RUN_SUMMARY
+echo ' Run Summary (Total) for $lib'  >> $SER_RUN_SUMMARY
+echo '--------------------------------------------' >> $SER_RUN_SUMMARY
+cat RunSummary.txt >> $SER_RUN_SUMMARY
+unzip -qq $ser_zip $ser_mrc
+mv $ser_mrc $target_mrc
+rm RunSummary.txt
+rm $ser_zip
+EOD
+        my @cmds = split(/\n/,$cmds);
+        foreach my $cmd ( @cmds ) {
+            #say $cmd, "\n";
+            system $cmd;
+        }
+   }
+}   
+
+# ------------------------------------------------------
 sub extract_mono_delta {
 # ------------------------------------------------------
     # move delta zipfile to subdirectories
     # and extract all data
+
     say "ftp: extracting monographs delta\n";
-    foreach my $key ( keys $downloads->{mono_delta} ) {
-        my $dir = $key .'_mono_delta';
+
+    my @key = keys $downloads->{mono_delta};
+    
+    foreach my $key ( @key ) {
+        my $dir = $key .'_delta';
         mkdir $dir
             or die "$0; cannot mkdir $dir: $!\n";
         my @zip = glob($downloads->{mono_delta}->{$key});
@@ -220,6 +314,45 @@ sub extract_mono_delta {
 mv $zip $dir
 unzip -qq $dir/$zip -d $dir
 rm -rf $dir/$zip
+
+mv $dir/ChangeMonographRecords.csv $dir/ChangeRecords.csv
+mv $dir/DeleteMonographRecords.csv $dir/DeleteRecords.csv
+mv $dir/NewMonographRecords.csv $dir/NewRecords.csv
+
+EOD
+        my @cmds = split(/\n/,$cmds);
+        foreach my $cmd ( @cmds ) {
+            #say $cmd, "\n";
+            system $cmd;
+        }
+    }
+}
+
+# ------------------------------------------------------
+sub extract_ser_delta {
+# ------------------------------------------------------
+    # move delta zipfile to subdirectories
+    # and extract all data
+
+    say "ftp: extracting serials delta\n";
+
+    my @key = keys $downloads->{ser_delta};
+    
+    foreach my $key ( @key ) {
+        my $dir = $key .'_delta';
+        mkdir $dir
+            or die "$0; cannot mkdir $dir: $!\n";
+        my @zip = glob($downloads->{ser_delta}->{$key});
+        my $zip = $zip[0];
+        my $cmds=<<EOD;
+mv $zip $dir
+unzip -qq $dir/$zip -d $dir
+rm -rf $dir/$zip
+
+mv $dir/ChangeSerialRecords.csv $dir/ChangeRecords.csv
+mv $dir/DeleteSerialRecords.csv $dir/DeleteRecords.csv
+mv $dir/NewSerialRecords.csv $dir/NewRecords.csv
+
 EOD
         my @cmds = split(/\n/,$cmds);
         foreach my $cmd ( @cmds ) {

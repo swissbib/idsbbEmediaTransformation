@@ -19,24 +19,25 @@ binmode(STDOUT,":utf8");
 use strict;
 use utf8;
 use lib $FindBin::Bin;
-use e_swissbib_db;
+use e_swissbib_db_test;
 
 # ---------------------------
 # input data sets
 # ---------------------------
-my @monoSets = ( 
+my @Sets = ( 
     'BS',
     'BE',
     'BBZ',
     'EHB',
     'FREE',
+    'SFREE',
 );
 
 # ---------------------------
 # local files and dirs
 # ---------------------------
-my $DATA_DIR = '/opt/data/e-books/data';
-my $STATS = $DATA_DIR .'/shadow_statistik.txt';
+my $DATA_DIR = '/opt/data/e-books_test/data';
+my $STATS = $DATA_DIR .'/shadow_statistik_test.txt';
 open(F,">$STATS") or die "cannot append to $STATS: $!";
 
 # ---------------------------
@@ -53,7 +54,7 @@ MARC published:
 EOD
 $count = $dbh->selectrow_array("select count(*) from emedia where MARC=1");
 printf F ("- total records:    %12.12s\n", pnum($count));
-foreach my $set ( sort @monoSets ) {
+foreach my $set ( sort @Sets ) {
     $count = $dbh->selectrow_array("select count(*) from emedia where Hol$set=1 and MARC=1");
     printf F ("- holdings %-8.8s %12.12s\n", $set .':', pnum($count));
 }
@@ -63,7 +64,7 @@ MARC not yet published:
 EOD
 $count = $dbh->selectrow_array("select count(*) from emedia where MARC=0");
 printf F ("- total records:    %12.12s\n", pnum($count));
-foreach my $set ( sort @monoSets ) {
+foreach my $set ( sort @Sets ) {
     $count = $dbh->selectrow_array("select count(*) from emedia where Hol$set=1 and MARC=0");
     printf F ("- holdings %-8.8s %12.12s\n", $set .':', pnum($count));
 }

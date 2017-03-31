@@ -2,17 +2,17 @@
 
 =head1 NAME
 
-merge-erm-ebook-marc.pl - merge holdings and links from 360MARC data files
+merge-erm-ebook-marc_test.pl - merge holdings and links from 360MARC data files
 
 =head1 SYNOPSIS
 
- perl merge-erm-ebook-marc.pl
+ perl merge-erm-ebook-marc_test.pl
 
 =head1 DESCRIPTION
 
 Input sind je eine 360MARC Dateien von Serial Solutions fuer die
 verschiedenen Instanzen des Intota-ERM (UB Basel, UB Bern, BBZ Bern,
-EHB Bern, FREE fuer freie Ressourcen [geplant]). 
+EHB Bern, FREE fuer freie Ressourcen). 
 Input-Format ist ISO 2709 (MARC).
 
 Output ist eine Datei im Format MARC21 XML ohne Dubletten und 
@@ -45,6 +45,7 @@ offenbar behoben.
 =head1 AUTHOR
 
 andres.vonarx@unibas.ch
+basil.marti@unibas.ch
 
 =head1 HISTORY
 
@@ -63,6 +64,8 @@ andres.vonarx@unibas.ch
             - Feld 950 wird nicht mehr generiert
             - Feld 949 wird gepatcht
             - Interpunktion fixen zusaetzlich fuer Feld 264
+ 02.03.2017 Kopie fuer Tests
+ 09.03.2017 Erweiterung fuer FREE-ZS
  
 =cut
 
@@ -85,27 +88,28 @@ use utf8;
 # input data sets
 # ** TIPP ** : Dateien nach Groesse ordnen
 # ---------------------------
-my @monoSets = ( 
-    'BS',       # mono-BS.mrc
-    'BE',       # mono-BE.mrc
-    'FREE',     # mono-FREE.mrc
-    'EHB',      # mono-EHB.mrc
-    'BBZ',      # mono-BBZ.mrc
+my @Sets = (
+    'BS',       # BS.mrc
+    'BE',       # BE.mrc
+    'FREE',     # FREE.mrc
+    'EHB',      # EHB.mrc
+    'SFREE',    # SFREE.mrc
+    'BBZ',      # BBZ.mrc
 );
 
 # ---------------------------
 # local files and dirs
 # ---------------------------
-my $DATA_DIR = '/opt/data/e-books/data';
+my $DATA_DIR = '/opt/data/e-books_test/data';
 
 chdir $DATA_DIR
     or die( "$0: cannot chdir to $DATA_DIR: $!\n");
 my $OUTPUT_XML  = 'tmp.xml';
-my $STATS = 'statistik.txt';
+my $STATS = 'statistik_test.txt';
 my $stats;
 my %input_files;
-foreach my $set ( @monoSets ) {
-    $input_files{$set} = "mono-" .$set .'.mrc';
+foreach my $set ( @Sets ) {
+    $input_files{$set} = $set .'.mrc';
     ( -f $input_files{$set} ) or die "kann $input_files{$set} nicht finden.";
 }
 
@@ -115,7 +119,7 @@ foreach my $set ( @monoSets ) {
 
 # merge these fields:
 my @Merge = (qw( 
-    856 949 
+    852 856 949 
 ));
 
 # remove some trailing punctuation from all subfields in these fields:
@@ -128,14 +132,14 @@ my $ESC = '~';
 
 # --------------------------------------------------------------
 # step 1:
-# - iterate thru marc file from mono set 2 thru n
+# - iterate thru marc file from set 2 thru n
 # - store IDs and fields which should be merged
 # - store package name (909f)
 # --------------------------------------------------------------
 my $store;
 my $packages;
-for ( my $i = 1 ; $i <= $#monoSets ; $i++ ) {
-    my $set = $monoSets[$i];
+for ( my $i = 1 ; $i <= $#Sets ; $i++ ) {
+    my $set = $Sets[$i];
     print "merge: storing data for $set in memory\n";
 
     my $marc = MARC::File::USMARC->in($input_files{$set});
@@ -161,7 +165,7 @@ for ( my $i = 1 ; $i <= $#monoSets ; $i++ ) {
 # --------------------------------------------------------------
 # step 2:
 # - open XML output file for writing
-# - iterate thru marc files from first mono set and extract ID
+# - iterate thru marc files from first set and extract ID
 # - if the ID matches a stored ID from another set:
 #   - merge fields
 #   - delete ID from memory
@@ -171,7 +175,7 @@ for ( my $i = 1 ; $i <= $#monoSets ; $i++ ) {
 my $xml  =  MARC::File::XML->out($OUTPUT_XML); 
 my $done;
 
-my $set = $monoSets[0];
+my $set = $Sets[0];
 print "merge: merging data into $set\n";
 
 my $marc =  MARC::File::USMARC->in($input_files{$set});
@@ -212,13 +216,13 @@ $marc->close;
 # step 3:
 # - iterate thru remaining marc files 2 thru n
 # - ignore record unless its ID is still in memory
-# - if stored ID(s) from other monoSets are found:
+# - if stored ID(s) from other Sets are found:
 #   - merge fields
 #   - delete id from memory
 # - output records
 # --------------------------------------------------------------
-for ( my $i = 1 ; $i <= $#monoSets ; $i++ ) {
-    my $set = $monoSets[$i];
+for ( my $i = 1 ; $i <= $#Sets ; $i++ ) {
+    my $set = $Sets[$i];
 
     print "merge: merging data into $set\n";
     my $marc =  MARC::File::USMARC->in($input_files{$set});

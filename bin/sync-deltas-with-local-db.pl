@@ -1,12 +1,11 @@
-#!/usr/bin/perl
-
+#!/usr/bin/perl 
 =head1 NAME
 
-sync-deltas-with-local-db.pl
+sync-deltas-with-local-db_test.pl
 
 =head1 SYNOPSIS
 
- perl sync-deltas-with-local-db.pl
+ perl sync-deltas-with-local-db_test.pl
 
 =head1 DESCRIPTION
 
@@ -30,6 +29,8 @@ andres.vonarx@unibas.ch
 =head1 HISTORY
 
  08.06.2016 beta / ava
+ 03.03.2017 Testversion / bmt
+ 09.03.2017 Ergänzung für E-Zeitschriften
  
 =cut
 
@@ -42,28 +43,29 @@ binmode(STDOUT,":utf8");
 use strict;
 use utf8;
 use lib $FindBin::Bin;
-use e_swissbib_db;
+use e_swissbib_db_test;
 
 # ---------------------------
 # input data sets
 # ---------------------------
-my @monoSets = ( 
+my @Sets = ( 
     'BS',
     'BE',
     'BBZ',
     'EHB',
     'FREE',
+    'SFREE',
 );
 
 # ---------------------------
 # local files and dirs
 # ---------------------------
 my($DATA_DIR,$DOWNLOAD_DIR);
-$DATA_DIR       = '/opt/data/e-books/data';
-$DOWNLOAD_DIR   = '/opt/data/e-books/download';
+$DATA_DIR       = '/opt/data/e-books_test/data';
+$DOWNLOAD_DIR   = '/opt/data/e-books_test/download';
 chdir $DOWNLOAD_DIR
     or die( "$0: cannot chdir to $DOWNLOAD_DIR: $!\n");
-my $STATS = $DATA_DIR .'/statistik.txt';    
+my $STATS = $DATA_DIR .'/statistik_test.txt';    
 my $stats;
 
 # ---------------------------
@@ -76,15 +78,15 @@ my $today = strftime("%Y-%m-%d",localtime);
 my $MONO_RUN_SUMMARY = $DATA_DIR .'/RunSummary-Mono-Delta.txt';
 unlink $MONO_RUN_SUMMARY;
 
-foreach my $set ( @monoSets ) {
-    my $dir = $set .'_mono_delta';
+foreach my $set ( @Sets ) {
+    my $dir = $set .'_delta';
     
     system qq|echo "----------------------------------" >> $MONO_RUN_SUMMARY|;
     system qq|echo "Run Summary (Delta Mono) for $set" >> $MONO_RUN_SUMMARY|;
     system qq|echo "----------------------------------" >> $MONO_RUN_SUMMARY|;
     system qq|cat $dir/RunSummary.txt >> $MONO_RUN_SUMMARY|;
 
-    my $file = "$dir/NewMonographRecords.csv";
+    my $file = "$dir/NewRecords.csv";
     if ( -f $file ) {
         print "delta: reading $file\n";
         open(F, "<$file") or die "kann Datei $file nicht lesen: $!";
@@ -92,11 +94,11 @@ foreach my $set ( @monoSets ) {
         while ( <F> ) {
             chomp;
             s/\,.*$//;
-            insert_or_update($_,$set);
+            insert_or_update_new($_,$set);
             $stats->{$set}->{new}++;
         }
     }
-    $file = "$dir/ChangeMonographRecords.csv";
+    $file = "$dir/ChangeRecords.csv";
     if ( -f $file ) {
         print "delta: reading $file\n";
         open(F, "<$file") or die "kann Datei $file nicht lesen: $!";
@@ -104,11 +106,11 @@ foreach my $set ( @monoSets ) {
         while ( <F> ) {
             chomp;
             s/\,.*$//;
-            insert_or_update($_,$set);
+            insert_or_update_changed($_,$set);
             $stats->{$set}->{changed}++;
         }
     }
-    $file = "$dir/DeleteMonographRecords.csv";
+    $file = "$dir/DeleteRecords.csv";
     if ( -f $file ) {
         print "delta: reading $file\n";
         open(F, "<$file") or die "kann Datei $file nicht lesen: $!";
@@ -148,7 +150,7 @@ sub pnum {
 }
 
 # ---------------------------
-sub insert_or_update {
+sub insert_or_update_changed {
 # ---------------------------
     my($id,$set)=@_;
     my $HOL = "Hol$set";
@@ -163,3 +165,19 @@ sub insert_or_update {
     }
     $dbh->do($sql);
 }
+
+# ---------------------------
+sub insert_or_update_new {
+# ---------------------------
+    my($id,$set)=@_;
+    my $HOL = "Hol$set";
+    $sth->bind_param(1,$id);
+    $sth->execute;
+    my $sql;
+    my ($rec) = $sth->fetchrow_arrayref;
+    if ( $rec ) {
+        $sql = "update emedia set $HOL=2,modified='$today' where ssid='$id'";
+    } else {
+        $sql = "insert into emedia set ssid='$id',$HOL=2,modified='$today'";
+    }
+    $dbh->do($sql);

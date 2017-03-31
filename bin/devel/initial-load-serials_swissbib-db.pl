@@ -49,8 +49,8 @@ source: basel-bern-emedia.xml
 
 EOD
 print "komplett neu aufbauen [j/N] ? ";
-#my $ans = <STDIN>;
-#exit unless $ans =~ /j/i;
+my $ans = <STDIN>;
+exit unless $ans =~ /j/i;
 
 my $PACIF = 500;
 my $pacif = $PACIF;
@@ -74,34 +74,20 @@ my $today = strftime("%Y-%m-%d",localtime);
 while ( my $rec = $marc->next() ) {
     my $ssid = $rec->field('001')->data;
     my($HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE);
-    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = $HolSFREE = 0;
-    foreach my $f ( $rec->field('949') ){
+    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = $HolSFREE= 0;
+    foreach my $f ( $rec->field('852') ){
         my $sub = $f->subfield('b');
-        if ( $sub eq 'A145' ) {
-            $HolBS=1;
-        } elsif ( $sub eq 'B405' ) {
-            $HolBE=1;
-        } elsif ( $sub eq 'B406' ) {
-            $HolBBZ=1;
-        } elsif ( $sub eq 'B407' ) {
-            $HolEHB=1;
-        } elsif ( $sub eq 'FREE' ) {
-            $HolFREE=1;
-        } else {
-            die("949 \$b = $sub: dieses Sigel kenne ich nicht!");
-        }
-    }
-    foreach my $g ( $rec->field('852') ){
-        my $sub = $g->subfield('b');
         if ( $sub eq 'FREE' ) {
             $HolSFREE=1;
+            my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE,1,'$today')|;
+            $dbh->do($sql);
+            unless ( $pacif-- ) {
+                $pacif = $PACIF;
+                print '.';
+            }
+        } else {
+            print $ssid . "949 \$b = $sub: dieses Sigel kenne ich nicht!\n";
         }
-    }
-    my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE)|;
-    $dbh->do($sql);
-    unless ( $pacif-- ) {
-        $pacif = $PACIF;
-        print '.';
     }
 }
 $marc->close;
