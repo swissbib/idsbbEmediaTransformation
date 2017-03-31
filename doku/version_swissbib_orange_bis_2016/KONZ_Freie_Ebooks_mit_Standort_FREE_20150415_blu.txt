@@ -1,0 +1,251 @@
+Betreff: 	Fwd: AW: WG: Neue Zweigstellen für E-Medien
+Datum: 	Wed, 15 Apr 2015 11:53:04 +0200
+Von: 	Bernd Luchner <Bernd.Luchner@unibas.ch>
+An: 	Andres von Arx <Andres.vonArx@unibas.ch>
+
+
+Hallo Andres,
+
+hier die Mail von Barbara mit der, wie sie sagt, nicht ständig 
+wechselnden Liste der freien E-Book-Pakete:
+
+  * Digitale Sammlungen
+  * DOAB: Directory of Open Access Books
+  * Google Books - Getty Publication Virtual Library
+  * InTech Open Access Books
+  * NCBI Bookshelf
+  * Project Gutenberg Online Catalog
+  * Wright American Fiction (1851-1875)
+
+Es geht darum, dass Aufnahmen, die dieses Paketnamen in 909 haben, nicht 
+A145 zugeordnet werden dürfen, sondern neu 'FREE', da es sich um frei 
+zugängliche Ressource handelt.
+
+
+Beispiel:
+
+
+Wenn in 909 subfield f eines dieser Pakete:
+
+
+  <datafield tag="909" ind1=" " ind2=" ">
+     <subfield code="f">Project Gutenberg Online Catalog</subfield>
+   </datafield>
+
+
+soll statt jetzt in 949:
+
+   <datafield tag="949" ind1=" " ind2=" ">
+     <subfield code="c">145VT</subfield>
+     <subfield code="b">A145</subfield>
+     <subfield code="B">IDSBB</subfield>
+     <subfield code="F">A145</subfield>
+     <subfield code="1">Volltext nur im Uninetz zugänglich</subfield>
+     <subfield code="u">http://www.gutenberg.org/etext/21374</subfield>
+   </datafield>
+
+künftig 949 so aussehen:
+
+   <datafield tag="949" ind1=" " ind2=" ">
+     <subfield code="c">OL</subfield>
+     <subfield code="b">FREE</subfield>
+     <subfield code="B">IDSBB</subfield>
+     <subfield code="F">FREE</subfield>
+     <subfield code="1">Volltext frei zugänglich</subfield>
+     <subfield code="u">http://www.gutenberg.org/etext/21374</subfield>
+   </datafield>
+
+Herzlich,
+Bernd
+
+-------- Weitergeleitete Nachricht --------
+Betreff: 	AW: WG: Neue Zweigstellen für E-Medien
+Datum: 	Tue, 31 Mar 2015 15:08:03 +0200
+Von: 	Barbara Kurz <barbara.kurz@unibas.ch>
+An: 	Bernd Luchner <bernd.luchner@unibas.ch>, Silvia Witzig 
+<silvia.witzig@unibas.ch>
+Kopie (CC): 	carla.buser@ub.unibe.ch <carla.buser@ub.unibe.ch>, Martin 
+Kohler <martin.kohler@ub.unibe.ch>, Andrea Hofer 
+<andrea.hofer@unibas.ch>, Andres von Arx <andres.vonarx@unibas.ch>, 
+Manuela Schwendener <manuela.schwendener@unibas.ch>
+
+
+
+Lieber Bernd
+
+Die Databases wechseln nicht ständig. Es sind genau die, die ich 
+angegeben haben.
+Es kommt zukünftig allenfalls mal eine neue hinzu wenn
+- es im ERM neue Freie E-Book Kollektionen gibt und
+- wenn die FR diese aktiviert haben möchten
+aber die wechseln nicht ständig. Und wir würden dich informieren, wenn 
+sich was ändert.
+
+In Swissbib können doch anhand des neuen Exemplarsatzes / Holdings dann 
+die Freien E-Ressourcen in den Facette angezeigt werden, wie dies jetzt 
+schon für 'Basel Online' und 'Bern Online' gemacht wird, oder ?
+
+-> Ich komme mal schnell bei euch vorbei, weil ich nicht ganz verstehe 
+was mit Sublibrary Code gemeint ist.
+
+Ja, es sollte natürlich Online frei zugänglich oder so was heissen 
+(Nicht nur Volltext wie ich geschrieben hatte, Sorry). Die Texte schauen 
+wir mit Martin, der das alles im Auftrag der Kofo koordiniert noch an.
+
+Bis gleich, lg Barbara
+
+-------------------------------
+UNIVERSITÄT BASEL
+Universitätsbibliothek
+Barbara Kurz
+Erwerbung E-Media
+Schönbeinstrasse 18-20
+4056 Basel, Schweiz
+Tel. +41 (0)61 267 09 02
+Fax  +41 (0)61 267 31 03
+E-Mailbarbara.kurz@unibas.ch
+URLhttp://www.ub.unibas.ch/
+
+------------------------------------------------------------------------
+*Von:* Bernd Luchner [Bernd.Luchner@unibas.ch]
+*Gesendet:* Dienstag, 31. März 2015 13:36
+*An:* Barbara Kurz; Silvia Witzig
+*Cc:* carla.buser@ub.unibe.ch; Martin Kohler; Andrea Hofer; Andres von 
+Arx; Manuela Schwendener
+*Betreff:* Re: WG: Neue Zweigstellen für E-Medien
+
+Liebe Barbara,
+
+dafür muss das merge-Script von Andres angepasst werden. Das kann er 
+oder ich machen.
+Aber: welche Database-Namen stehen da jetzt bei diesen freien 
+Kollektionen in 909 $f? Genau die, die Du unten aufgeführt hast? Und das 
+ändert sich bei jeder Lieferung? Das kann nicht Euer Ernst sein.
+Dann hatte Manu noch eine gute Idee für den Sublibrary-Code für die 
+freien Kollektionen, nämlich FREE. Und das möglichst schweizweit, wie FHCH.
+Das hätte den Vorteil, dass die entsprechende Facette in swissbib 
+(orange und grün) auch einfach abgeleitet werden könnte. Der Text sollte 
+dann vielleicht heissen: "Volltext frei zugänglich" oder so. Das wird 
+bei der KOFOFO deponiert.
+
+Herzlich,
+Bernd
+
+
+Barbara Kurz schrieb:
+> Lieber Bernd, Liebe Silvia
+>
+> Betreffend Exemplarsatz für frei in Internet verfügbare E-Books stellt 
+> sich nun auch die Frage, wie dies für die free E-Books die wir via 
+> _360 Marc Updates_ bekommen möglich ist.
+>
+> Wir haben ja im ERM einige freie grosse Kollektionen für die 
+> Datenlieferung aktiviert und die kommen z.Zt. noch mit dem 
+> Exemplarsatz für Uni Basel Online und auch beim Link steht der Text 
+> 'Uni Basel: Volltext'  weil alle E-Books Daten von 360 MarcUpdates so 
+> strukturiert sind.
+> Bsp. http://baselbern.swissbib.ch/Record/ssj0001057253
+>
+> Der Database name steht bei der Datenlieferung jeweils in Feld 909 $f
+>
+> Alle Free Databases die wir auf Wunsch des Fachreferates aktiviert 
+> haben, sind auf der Intranetseite
+> http://intraweb.ub.unibas.ch/index.php?id=3401
+> dokumentiert.
+>
+> Es sind dies momentan:
+>
+>   * Digitale Sammlungen
+>   * DOAB: Directory of Open Access Books
+>   * Google Books - Getty Publication Virtual Library
+>   * InTech Open Access Books
+>   * NCBI Bookshelf
+>   * Project Gutenberg Online Catalog
+>   * Wright American Fiction (1851-1875)
+>
+>
+> Hier sollte zukünftig in Swissbib Basel Bern nun auch der neue 
+> Exemplarsatz Z995 und bei Online Zugang nur noch 'Volltext' angezeigt 
+> werden.
+>
+> Kannst du diese Änderungen bei den Datenlieferungen jeweils vornehmen 
+> (oder Andres ein gescheites Progrämmli schreiben :-) ) ?
+> Das müsste ja dann bei jeder Datenlieferung angepasst werden, da wir 
+> alle Daten von 360 MarcUpdates immer gleich strukturiert bekommen.
+>
+> Ich wollte das nur schon mal bei euch deponieren, damit das 
+> vorbereitet werden kann.
+>
+> @Bernd: Momentan schauen wir (Martin Kohler, Carla Buser und ich) 
+> grerade, wie der Ablauf sein wird für die Einführung bei den manuell 
+> katalogisierten freien E-Ressourcen.
+> Hier werde ich sicherlich auch nochmals auf dich zukommen, da wir bei 
+> freien E-Journals den alten Code ejbs durch den neuen lokalen Code 909 
+> A $a ejfree für freie E-Journals korrigieren und jetzt schon 1365 
+> Aufnahmen in Aleph
+> haben (wo dann der neuen HOL Satz angehängt werden muss). Das bereite 
+> ich aber dann noch genauer für dich vor.
+>
+> Herzliche Grüsse
+> Barbara
+> -------------------------------
+> UNIVERSITÄT BASEL
+> Universitätsbibliothek
+> Barbara Kurz
+> Erwerbung E-Media
+> Schönbeinstrasse 18-20
+> 4056 Basel, Schweiz
+> Tel. +41 (0)61 267 09 02
+> Fax  +41 (0)61 267 31 03
+> E-Mailbarbara.kurz@unibas.ch
+> URLhttp://www.ub.unibas.ch/
+> ------------------------------------------------------------------------
+> _____________________________________________
+> *Von:* Kohler, Martin (UB)
+> *Gesendet:* Montag, 23. März 2015 16:16
+> *An:* 'Barbara Kurz'; Buser, Carla (UB)
+> *Betreff:* Neue Zweigstellen für E-Medien
+> Liebe Barbara, liebe Carla
+> Bernd hat drei neue Zweigstellen eingerichtet, die E-Medien betreffen. 
+> Swissbib (grün und Basel Bern) benötigen eine gewisse Zeit für das 
+> Einrichten, so dass die Zweigstellen ab 1. April im IDSBB genutzt 
+> werden können.
+> Verbundweit von Interesse ist sicher derjenige für frei zugängliche 
+> E-Medien.
+> Exemplarsatz:
+> Zweigstelle Z995: „Online. Frei zugänglich“
+> Vorerst einziger Standort (995OL): „Online. Links siehe unter Online“
+> Exemplarstatus: 60
+> Materialart: DIGIT
+> Berechtigung sollte für alle Katalogisierenden gelten.
+> An den OPAC-Texten könnte sicher noch geschraubt werden (es erscheint  
+> etwas viel „online“).
+> Fragen sind nun:
+>
+>   * offizieller Einführungstermin der Neuerung?
+>   * wann die Anleitungen in babette ergänzen?
+>   * wann die Katalogisierenden informieren?
+>   * Wer macht nun was?
+>   * Weiteres?
+>
+> Was noch fehlt sind die IDSBB-Bib-Infos. Die liefere ich noch nach Basel.
+> Zur Info: Die neuen Zweigstellen B406 und B407 wurden für die E-Medien 
+> des BZP (B433) bzw. des EHB (B418) eingerichtet. Beide planen das 
+> Einspielen von E-Book-Paketen via ERM und in Zusammenarbeit mit der 
+> E-Library der UB Bern (Jan).
+> Herzliche Grüsse
+> Martin
+> _______________________________
+> Universität Bern
+> Universitätsbibliothek Bern
+> Verbundzentrale
+> Martin Kohler
+> Leitung Team Partnerbibliotheken
+> Muesmattstrasse 45
+> Unitobler
+> CH-3000 Bern 9
+> Tel. +41 (0)31 631 46 45 (Mo - Do Mittag, Fr Vormittag)
+> Fax +41 (0)31 631 47 05
+> _mailto:martin.kohler@ub.unibe.ch_
+
+

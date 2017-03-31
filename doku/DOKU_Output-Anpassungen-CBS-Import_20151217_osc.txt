@@ -1,0 +1,61 @@
+Wenn das Importverfahren für E-Book-Metadaten von SerialSolutions umgestellt wird und die Daten in CBS verarbeitet und geladen werden, kann das bisherige Verfahren 
+angepasst werden. Folgende zwei Bereiche:
+* Umgang mit Paketen (neu sollen auch deletes geliefert werden)
+* Erstellen der Metadaten (Merging, MARC-Erweiterungen)
+
+******************
+UMGANG MIT PAKETEN
+******************
+(siehe auch die Skizze von ava, 17.12.2013, DOKU_Preprocessing_360MARC-Daten_beim_Import)
+
+1. Am Verfahren soll grundsätzlich festgehalten werden. D.h.:
+ * Pakete werden bei serialsolutions per ftp abgeholt durch perl-Skript von Andres 
+ * mrc-Dateien werden zusammengeführt
+   > neu werden deletes geliefert werden müssen. Nach dem Merging werden zwei Dateien
+     erstellt werden (basel-bern-ebooks.xml / basel-bern-ebooks-deleted.xml)
+ * via perl-skripte wird eine xml-Struktur erstellt. Inhaltlich s.u. Felder
+ * aus dem delete-file wird eine xml-Struktur für deletes erstellt
+ 
+2. Diese xml-Dateien werden dann nicht direkt in solr indexiert, sondern vom contentCollector
+   abgeholt und in die CBS-Pipeline eingestellt (mit Günter klären)
+ 
+******
+FELDER
+******
+Die Erstellung folgender Felder fällt weg, da sie in CBS erstellt werden:
+* 950 (Parking-Felder)
+* 898 (swissbib Formatcode)
+
+Das Exemplarfeld (M21 949) soll angepasst werden, damit es einem Exemplarfeld aus Aleph "gleicht". Damit können in CBS die Aleph-Routinen zum Bau von Exemplaren
+(in CBS: Level-2) verwendet werden.
+Struktur (Kommentar in Klammern je Unterfeld):
+------
+949
+$bA145 (Zweigstellencode)
+$c145VT (Standortcode)
+$0Basel UB (Bibliotheksname, optional)
+$3BOOK (Materialtyp, immer 'BOOK')
+$uhttp://... (Service-URL -> muss in Aleph-Transformation noch ergänzt werden)
+$j- (optional, mit "Nullsignatur")
+------
+
+******
+FRAGEN
+******
+* Müssen namespaces für die XML-Dateien erstellt werden?
+  -> nur wenn in einer OAI-Struktur eingebettet. Also nicht nötig, da nur marcxml
+* Sollen die Metadaten nach worldcat geschickt werden, oder soll standardmässig ein Code 'noworldcat' vergeben werden?
+  > Diese Frage ist auch für das Anreicherungsprojekt mit OCLC Leiden wichtig. Sollte rechtlich und inhaltlich in Q1 geklärt werden.
+* Wie soll mit der Quelle SerSol in Bezug auf ILN in CBS umgegangen werden? Dieselbe ILN wie für IDSBB? Eine eigene? Wo spielt die ILN genau eine Rolle?
+  > mit Tonny / Leiden klären
+* genaue Konfiguration des Imports (commands / options in CBS/confdir)
+
+*******************
+VERARBEITUNG IN CBS
+*******************
+* Bereits erstellt wurde ein title-Skript (sersol-title.fcv). Die regulären includes können mit leichten Erweiterungen verwendet werden. Getestet, läuft sehr gut.
+  Nach Anpassung der Exemplarstruktur (s.o.) klappt auch das
+  * Noch offen: Service-URL (949 $u)
+* Matching/Merging: Problematisch kann das Mergen mit Hybrid-Aufnahmen sein. Für swissbib orange sehe ich aber kein Problem. Problematisch sind Printbestände z.B. des SWA, die
+  mit Hybridbeständen z.B. des IDSSG mergen. Diese werden dann als E-Book angezeigt. Für den umgekehrten Fall profitieren wir von der Beschlagwortung, unsere E-Books werden aber
+  als E-Books angezeigt.

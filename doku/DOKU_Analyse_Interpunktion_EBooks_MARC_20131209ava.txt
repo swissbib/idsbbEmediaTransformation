@@ -1,0 +1,97 @@
+Die 360MARC Daten enthalten meist die von MARC vorgesehene Interpunktion,
+aber offenbar nicht immer.
+
+Welche Interpunktion am Ende eines MARC Subfeldes muss entfernt werden?
+
+---------------------------------------------------------------------
+Fazit
+---------------------------------------------------------------------
+In folgenden Feldern für alle Unterfelder die Interpunktion sanft (*) 
+löschen:
+
+100 110 111 245 260 300 600 610 611 630 650 651 653 655 700 710 711
+
+(*) entfernt werden: 
+        .,:/ (inkl. vorausgehende Spatien)
+    nicht entfernt werden:
+        ?()[]!
+        Punkt nach "Dr.", "Jr.", "Inc." und nach Grossbuchstaben
+
+---------------------------------------------------------------------
+Analyse
+---------------------------------------------------------------------
+Vorgehen: einzelne Subfelder können extrahiert werden mit:
+$ cd bin
+$ xsltproc --stringparam FIELD 100 --stringparam SUBFIELD a \
+    extrahiere-marc-unterfeld.xsl ../data/basel-bern-ebooks.xml 
+    
+Untersucht werden die Felder von Jolidon's Liste "Edit_fd.txt"    
+---------------------------------------------------------------------
+# ok:  Unterfeld hat keine überflüssige Interpunktion
+# NA:  Unterfeld kommt nicht vor
+# ZZZ: Interpunktion sanft entfernen
+
+020 a   ok      
+022 a   NA
+
+100 a   ZZZ
+100 b   ZZZ     # Jr. | III
+100 c   ZZZ     # Dr. | Duke of, | Jr. 
+100 d   ok      # Lebensdaten, ohne Klammern
+100 n   NA
+100 p   NA
+100 q   ZZZ     # (Greg John), 
+100 t   ZZZ     # Titel
+
+110 #   s. 710
+111 #   s. 711
+
+130 #   NA
+210 #   NA
+222 #   NA
+240 #   NA
+
+245 a   ZZZ
+245 b   ZZZ
+245 c   ZZZ
+245 d   NA
+245 f   ZZZ
+245 h   ZZZ
+245 i   NA
+245 n   ZZZ
+245 p   ZZZ
+
+250 #   NA
+255 #   NA
+
+260 a   ZZZ     # Doppelpunkt
+260 b   ZZZ     # Komma
+260 c   ZZZ     # Punkt
+260 e   ZZZ     # Doppelpunkt
+260 f   ZZZ     # Komma
+260 g   ZZZ     # Punkt
+
+300 a   ZZZ     
+300 b   ZZZ      
+300 c   NA
+300 e   ZZZ
+
+# wichtig sind nur MeSH (Indikator 2)
+# aber bei den anderen 6## schadet es auch nichts
+600 #  ZZZ
+610 #  ZZZ
+611 #  ZZZ
+630 #  ZZZ
+650 #  ZZZ
+651 #  ZZZ
+653 #  ZZZ
+655 #  ZZZ
+
+700 #   ZZZ     # analog 100
+
+710 a   ZZZ
+710 b   ZZZ
+710 c   ZZZ
+710 d   ZZZ     # yyyy:
+710 e   na
+710 f   ZZZ

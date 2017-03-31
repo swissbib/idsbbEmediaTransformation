@@ -1,0 +1,273 @@
+Was geschieht, wenn ein Berner Datensatz identisch ist mit einem
+Datensatz aus einem Open Access Paket, das von Basel aufgeschaltet 
+wurde?
+
+- Die Berner und Basler Holdings (949) verschwinden.
+- Es gibt nur ein Holdings Feld 949 FREE
+
+
+Was geschieht mit mehreren Links (950/856), wenn der Record zu einem
+OA-Paket gehört?
+
+- Der zufällig erste Link wird umgeschrieben in 
+  "$B FREE $z Volltext frei zugänglich."
+  
+  *** TO BE ANALYZED ***
+
+27.05.2015/ava
+
+====================================================================
+
+Beispiel: Record: ssib002385705
+
+in Basel:
+- im Paket "HeinOnline World Constitutions Illustrated: Contemporary & Historical Documents & Resources"
+- im Paket "Project Gutenberg Online Catalog"
+
+in Bern: 
+- im Paket "HeinOnline World Constitutions Illustrated: Contemporary & Historical Documents & Resources"
+
+--------------------------------------------------------------
+MARC Record Basel
+--------------------------------------------------------------
+<record>
+  <leader>01341nam a22002893u 4500</leader>
+  <controlfield tag="001">ssib002385705</controlfield>
+  <controlfield tag="003">WaSeSS</controlfield>
+  <controlfield tag="005">20150522180131.0</controlfield>
+  <controlfield tag="006">m                 </controlfield>
+  <controlfield tag="007">cr            </controlfield>
+  <controlfield tag="008">150522s1854    ||||||||s|||||||| ||||| d</controlfield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(WaSeSS)ssib002385705</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">WaSeSS</subfield>
+    <subfield code="c">WaSeSS</subfield>
+    <subfield code="d">WaSeSS</subfield>
+  </datafield>
+  <datafield tag="245" ind1="0" ind2="0">
+    <subfield code="a">American institutions and their influence</subfield>
+    <subfield code="h">[Elektronische Daten] /</subfield>
+    <subfield code="c">Tocqueville ... [et. al.].</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">[S.l.] :</subfield>
+    <subfield code="b">[s.n.],</subfield>
+    <subfield code="c">1854.</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">Online-Ressource.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Title from content provider.</subfield>
+  </datafield>
+  <datafield tag="506" ind1=" " ind2=" ">
+    <subfield code="a">Lizenzbedingungen können den Zugang einschränken. License restrictions may limit access.</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Tocqueville.</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+    <subfield code="z">Uni Basel: Volltext</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="u">http://www.gutenberg.org/etext/8690</subfield>
+    <subfield code="z">Uni Basel: Volltext</subfield>
+  </datafield>
+  <datafield tag="898" ind1=" " ind2=" ">
+    <subfield code="a">BK020053</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="f">HeinOnline World Constitutions Illustrated: Contemporary &amp; Historical Documents &amp; Resources</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="f">Project Gutenberg Online Catalog</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="a">E-Books von 360 MarcUpdates</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="c">145VT</subfield>
+    <subfield code="b">A145</subfield>
+    <subfield code="B">IDSBB</subfield>
+    <subfield code="F">A145</subfield>
+    <subfield code="1">Volltext nur im Uninetz zugänglich</subfield>
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="c">145VT</subfield>
+    <subfield code="b">A145</subfield>
+    <subfield code="B">IDSBB</subfield>
+    <subfield code="F">A145</subfield>
+    <subfield code="1">Volltext nur im Uninetz zugänglich</subfield>
+    <subfield code="u">http://www.gutenberg.org/etext/8690</subfield>
+  </datafield>
+</record>
+--------------------------------------------------------------
+MARC Record Bern
+--------------------------------------------------------------
+<record>
+  <leader>01103nam a22002533u 4500</leader>
+  <controlfield tag="001">ssib002385705</controlfield>
+  <controlfield tag="003">WaSeSS</controlfield>
+  <controlfield tag="005">20150523180052.0</controlfield>
+  <controlfield tag="006">m                 </controlfield>
+  <controlfield tag="007">cr            </controlfield>
+  <controlfield tag="008">150523s1854    ||||||||s|||||||| ||||| d</controlfield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(WaSeSS)ssib002385705</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">WaSeSS</subfield>
+    <subfield code="c">WaSeSS</subfield>
+    <subfield code="d">WaSeSS</subfield>
+  </datafield>
+  <datafield tag="245" ind1="0" ind2="0">
+    <subfield code="a">American institutions and their influence</subfield>
+    <subfield code="h">[Elektronische Daten] /</subfield>
+    <subfield code="c">Tocqueville ... [et. al.].</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">[S.l.] :</subfield>
+    <subfield code="b">[s.n.],</subfield>
+    <subfield code="c">1854.</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">Online-Ressource.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Title from content provider.</subfield>
+  </datafield>
+  <datafield tag="506" ind1=" " ind2=" ">
+    <subfield code="a">Lizenzbedingungen können den Zugang einschränken. License restrictions may limit access.</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Tocqueville.</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+    <subfield code="z">Uni Bern: Volltext</subfield>
+  </datafield>
+  <datafield tag="898" ind1=" " ind2=" ">
+    <subfield code="a">BK020053</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="f">HeinOnline World Constitutions Illustrated: Contemporary &amp; Historical Documents &amp; Resources</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="a">E-Books von 360 MarcUpdates</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="c">405VT</subfield>
+    <subfield code="b">B405</subfield>
+    <subfield code="B">IDSBB</subfield>
+    <subfield code="F">B405</subfield>
+    <subfield code="1">Volltext nur im Uninetz zugänglich</subfield>
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+  </datafield>
+</record>
+
+--------------------------------------------------------------
+MARC Record gemerged
+--------------------------------------------------------------
+<record>
+  <leader>01341nam a22002893u 4500</leader>
+  <controlfield tag="001">ssib002385705</controlfield>
+  <controlfield tag="003">WaSeSS</controlfield>
+  <controlfield tag="005">20150522180131.0</controlfield>
+  <controlfield tag="006">m                 </controlfield>
+  <controlfield tag="007">cr            </controlfield>
+  <controlfield tag="008">150522s1854    ||||||||s|||||||| ||||| d</controlfield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(WaSeSS)ssib002385705</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">WaSeSS</subfield>
+    <subfield code="c">WaSeSS</subfield>
+    <subfield code="d">WaSeSS</subfield>
+  </datafield>
+  <datafield tag="245" ind1="0" ind2="0">
+    <subfield code="a">American institutions and their influence</subfield>
+    <subfield code="h">[Elektronische Daten]</subfield>
+    <subfield code="c">Tocqueville ... [et. al.]</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">[S.l.]</subfield>
+    <subfield code="b">[s.n.]</subfield>
+    <subfield code="c">1854</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">Online-Ressource</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Title from content provider.</subfield>
+  </datafield>
+  <datafield tag="506" ind1=" " ind2=" ">
+    <subfield code="a">Lizenzbedingungen können den Zugang einschränken. License restrictions may limit access.</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Tocqueville</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+    <subfield code="z">Uni Basel: Volltext</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="u">http://www.gutenberg.org/etext/8690</subfield>
+    <subfield code="z">Uni Basel: Volltext</subfield>
+  </datafield>
+  <datafield tag="898" ind1=" " ind2=" ">
+    <subfield code="a">BK020053</subfield>
+    <subfield code="b">XK020053</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="f">HeinOnline World Constitutions Illustrated: Contemporary &amp; Historical Documents &amp; Resources</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="f">Project Gutenberg Online Catalog</subfield>
+  </datafield>
+  <datafield tag="909" ind1=" " ind2=" ">
+    <subfield code="a">E-Books von 360 MarcUpdates</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+    <subfield code="z">Uni Bern: Volltext</subfield>
+  </datafield>
+  <datafield tag="950" ind1=" " ind2=" ">
+    <subfield code="B">IDSBB</subfield>
+    <subfield code="P">700</subfield>
+    <subfield code="E">--</subfield>
+    <subfield code="a">Tocqueville</subfield>
+  </datafield>
+  <datafield tag="950" ind1=" " ind2=" ">
+    <subfield code="B">FREE</subfield>
+    <subfield code="P">856</subfield>
+    <subfield code="E">--</subfield>
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+    <subfield code="z">Volltext frei zugänglich</subfield>
+  </datafield>
+  <datafield tag="950" ind1=" " ind2=" ">
+    <subfield code="B">IDSBB</subfield>
+    <subfield code="P">856</subfield>
+    <subfield code="E">--</subfield>
+    <subfield code="u">http://www.gutenberg.org/etext/8690</subfield>
+    <subfield code="z">Uni Basel: Volltext</subfield>
+  </datafield>
+  <datafield tag="950" ind1=" " ind2=" ">
+    <subfield code="B">IDSBB</subfield>
+    <subfield code="P">856</subfield>
+    <subfield code="E">--</subfield>
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+    <subfield code="z">Uni Bern: Volltext</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="c">OL</subfield>
+    <subfield code="b">FREE</subfield>
+    <subfield code="B">IDSBB</subfield>
+    <subfield code="F">FREE</subfield>
+    <subfield code="1">Volltext frei zugänglich</subfield>
+    <subfield code="u">http://www.heinonline.org/HOL/Page?handle=hein.cow/ainsthi0001&amp;collection=cow</subfield>
+  </datafield>
+</record>

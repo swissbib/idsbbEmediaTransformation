@@ -1,0 +1,108 @@
+-----------------------------------------------------
+Protokoll des Initialisierens der E-Media Datenbanken
+-----------------------------------------------------
+
+1. Daten downloaden und gesamten Bestand mergen.
+
+   $ /opt/scripts/e-books/bin/make-idsbb-emedia.sh @ ub-catmandu
+   
+   mit:
+   - DO_DOWNLOAD=1
+   - DO_MERGE=1
+   - DO_CLEANUP=1
+
+    -------------------------------------------------
+    Download and preprocess 360MARC data for swissbib
+    -------------------------------------------------
+    START: Mit Okt 12 14:45:29 CEST 2016
+    * download and extract data
+    ftp: contact ftp.serialssolutions.com
+    ftp: downloading 1UB_360MARC_Update_mono.zip...
+    ftp: downloading BB3_360MARC_Update_mono.zip...
+    ftp: downloading EH1_360MARC_Update_mono.zip...
+    ftp: downloading BB3_360MARC_Update_new_changed_deleted_files.zip...
+    ftp: downloading EH1_360MARC_Update_new_changed_deleted_files.zip...
+    ftp: downloading 1UB_360MARC_Update_new_changed_deleted_files.zip...
+    ftp: downloading 3UB_360MARC_Update_mono.zip...
+    ftp: downloading 2UB_360MARC_Update_mono.zip...
+    ftp: downloading 2UB_360MARC_Update_new_changed_deleted_files.zip...
+    ftp: downloading 3UB_360MARC_Update_mono_new_changed_deleted_files.zip...
+    ftp: download complete
+    ftp: extracting monographs
+    ftp: extracting delta
+    * merge all ERM instances
+    * [please be patient for about 30 minutes...]
+    merge: storing data for BE in memory
+    merge: storing data for FREE in memory
+    merge: storing data for EHB in memory
+    merge: storing data for BBZ in memory
+    merge: merging data into BS
+    merge: merging data into BE
+    merge: merging data into FREE
+    merge: merging data into EHB
+    merge: merging data into BBZ
+    * fix unicode
+    * clean up temp files
+    END Mit Okt 12 15:07:56 CEST 2016
+    -------------------------------------------------
+
+2. MySQL e_swissbib.emedia initialiseren (auf ub-filesqm und ub-filesvm).
+
+    $ perl .../bin/devel/initial-load-e_swissbib-db.pl
+
+    host:   ub-filesvm
+    table:  e_swissbib.emedia
+    source: basel-bern-emedia.xml
+
+    komplett neu aufbauen [j/N] ? j
+    
+
+3. Werte ueberpruefen.
+
+    $ perl .../bin/e_swissbib_db_stats.pl
+    $ cat /opt/data/e-books/data/statistik.txt
+
+    -----------------------------------------------------
+    preprocess IDS Basel Bern e-media for swissbib CBS
+    date: 2016-10-12 15:04
+    -----------------------------------------------------
+    360MARC records merged:
+    -----------------------------------------------------
+    Total records:           389'772
+    - with holdings BBZ        2'048
+    - with holdings BE       164'334
+    - with holdings BS       344'292
+    - with holdings EHB       25'939
+    - with holdings FREE     119'312
+    -----------------------------------------------------
+    record IDs in table e_swissbib.emedia @ ub-filesvm
+    -----------------------------------------------------
+    MARC published:
+    - total records:         389'772
+    - holdings BBZ:            2'048
+    - holdings BE:           164'334
+    - holdings BS:           344'292
+    - holdings EHB:           25'939
+    - holdings FREE:         119'312
+
+    MARC not yet published:
+    - total records:               0
+    - holdings BBZ:                0
+    - holdings BE:                 0
+    - holdings BS:                 0
+    - holdings EHB:                0
+    - holdings FREE:               0
+    -----------------------------------------------------
+
+4. XML Datei fuer Swissbib aufbereiten:
+    (umformatieren, zippen):
+
+    $ cd /opt/data/e-books/data
+    $ perl /opt/scripts/e-books/bin/reformat-marcxml.pl < basel-bern-ebooks.xml > sersol-idsbb-emedia-erstladen.xml
+    $ gzip sersol-idsbb-emedia-erstladen.xml
+    
+    Resultat, bereit zum Erstladen in Swissbib:
+    /opt/data/e-books/data/sersol-idsbb-emedia-erstladen.xml.gz
+
+
+13.10.2016/ava

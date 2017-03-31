@@ -1,0 +1,161 @@
+========================================================================
+Projekt:     Import von EBooks MARC Daten via ERM in Swissbib
+Teilprojekt: Aufbereitung der MARC Daten 
+Status:      Analyse
+Version:     14.06.2013
+Autor:       Andres von Arx
+========================================================================
+
+------------------------------------------------------------------------
+Summary
+------------------------------------------------------------------------
+Zur Zeit werden erst 360MARC Testdaten von Serial Solutions geliefert.
+Das interne Format ist noch verhandelbar, z.B. fuer Holdings, OpenURLs, 
+Direktlinks.
+
+Getestet und dokumentiert sind hier:
+- Merging von Basler und Berner Datei in  *eine* Datei
+- Normalisierung Zeichensatz
+
+
+------------------------------------------------------------------------
+1. Merging von Basler und Berner Daten
+------------------------------------------------------------------------
+NAME
+
+merge-erm-ebook-marc.pl - merge holdings and links from two 360MARC data files
+
+SYNOPSIS
+
+perl merge-erm-ebook-marc.pl --basel=basel.mrc --bern=bern.mrc --out=merge.xml
+
+DESCRIPTION
+
+Input sind je eine 360MARC Dateien von Serial Solutions fuer Basel und
+fuer Bern im Format ISO 2709 (MARC). Output ist eine gemergte Datei
+im selben Format ohne Dubletten und mit gemergten Holdings und URL-Links.
+
+Beispiel (Input fuer bessere Lesbarkeit konvertiert in MARC21):
+
+basel.xml:
+
+ <record>
+   <controlfield tag="001">ssj0000570299</controlfield>
+   ...
+   <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="z">[*** BASEL ***] Full text available from SpringerLink ebooks - Medicine (2012)</subfield>
+    <subfield code="u">http://link.springer.com/openurl?genre=book&amp;isbn=978-3-642-04232-4</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="x">Dummy field for BASEL </subfield>
+    <subfield code="y">Dummy field for BASEL </subfield>
+    <subfield code="z">Dummy field for BASEL </subfield>
+  </datafield>
+ </record>
+
+bern.xml:
+
+ <record>
+   <controlfield tag="001">ssj0000570299</controlfield>
+   ...
+   <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="z">[*** BERN ***] Full text available from SpringerLink ebooks - Medicine (2012)</subfield>
+    <subfield code="u">http://link.springer.com/openurl?genre=book&amp;isbn=978-3-642-04232-4</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="x">Dummy field for BERN </subfield>
+    <subfield code="y">Dummy field for BERN </subfield>
+    <subfield code="z">Dummy field for BERN </subfield>
+  </datafield>
+ </record>
+
+Resultat merge.xml:
+
+ <record>
+   <controlfield tag="001">ssj0000570299</controlfield>
+   ...
+   <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="z">[*** BASEL ***] Full text available from SpringerLink ebooks - Medicine (2012)</subfield>
+    <subfield code="u">http://link.springer.com/openurl?genre=book&amp;isbn=978-3-642-04232-4</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="x">Dummy field for BASEL </subfield>
+    <subfield code="y">Dummy field for BASEL </subfield>
+    <subfield code="z">Dummy field for BASEL </subfield>
+  </datafield>
+   <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="z">[*** BERN ***] Full text available from SpringerLink ebooks - Medicine (2012)</subfield>
+    <subfield code="u">http://link.springer.com/openurl?genre=book&amp;isbn=978-3-642-04232-4</subfield>
+  </datafield>
+  <datafield tag="949" ind1=" " ind2=" ">
+    <subfield code="x">Dummy field for BERN </subfield>
+    <subfield code="y">Dummy field for BERN </subfield>
+    <subfield code="z">Dummy field for BERN </subfield>
+  </datafield>
+ </record>
+ 
+CAVEAT
+
+Bis jetzt erst getestet mit Daten, die kuenstlich mit Basler und Berner
+Holdings und Links versehen wurden. Das Programm geht davon aus, dass
+in den Holdings und Links selbst erkennbar ist, ob die Daten aus Basel
+oder aus Bern stammen. 
+
+HISTORY
+
+ 07.03.2013/ava
+
+
+--------------------------------
+2. Zeichensatz normalisieren
+--------------------------------
+Die MARC libraries liefern MARC21 XML mit UTF-8 in einem "decomposed" 
+Format (Grundbuchstabe plus Diakritikum). Wir verwandeln das in die 
+"precomposed" Form von Unicode, d.h. in die "Normalization Form D (NFD),
+Canonical Decomposition. Fehlerhafte UTF-8-Zeichen werden geloescht.
+
+perl bin/normalize_unicode < input.xml > output.xml
+
+
+------------------------------------------------------------------------
+3. Demodaten
+------------------------------------------------------------------------
+basel.mrc
+bern.mrc
+    Demodaten mit künstlich erzeugten Feldern 856 und 949 mit lokalisiertem Inhalt
+   
+merge.xml                     
+    Merge aus basel.mrc und bern.mrc
+
+merge-per-record.xml
+    Konversion von merge.xml: alle <record>-Elemente auf je einer Zeile (mit reformat-marcxml.pl, ava)
+
+merge_solrout1.xml
+    Mit solr document processing behandelte Testdaten aus merge-per-record.xml (blu, 18.06.2013)
+
+GroupTest_360MARC_ebooks.mrc
+    Originallieferung von Serial Solutions (2012), 10'000 records
+
+GroupTest_360MARC_ebooks.xml
+    dasselbe, konvertiert nach XML, Zeichensatz normalisiert
+
+GroupTest_360MARC_ebooks_reformated.xml
+    behandelt mit reformat-marcxml.pl (blu, 24.06.2013)
+    
+demo_360MARC_ebooks_bad.xml
+    Auszug (50 records), mit unkorrigiertem Zeichensatz
+
+demo_360MARC_ebooks_good.xml
+    Auszug (50 records), mit normalisiertem Zeichensatz
+
+BernBasel_MARC_direct856_books_monographs_new.mrc
+    Lieferung Serial Solutions der IBB-Pakete vom 25.01.2013 (1'319 records)
+
+Bearbeitungsschritte:
+BernBasel_MARC_direct856_books_monographs_new.xml
+BernBasel_MARC_direct856_books_monographs_new_utf8.xml
+BernBasel_MARC_direct856_books_monographs_new_utf8_reformat.xml
+
+Letztes file als erm_20130125.xml im solr document processing behandelt (blu, 26.06.2013).
+
+
