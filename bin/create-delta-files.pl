@@ -69,10 +69,13 @@ keep track of which MARC record has been delivered.
 =head1 AUTHOR
 
 andres.vonarx@unibas.ch
+basil.marti@unibas.ch
 
 =head1 HISTORY
 
  09.06.2016 beta / ava
+ 02.03.2017 Testversion / bmt
+ 09.03.2017 Erweiterung für freie E-Zeitschriften / bmt
  
 =cut
 
@@ -81,6 +84,8 @@ use Data::Dumper; $Data::Dumper::Indent=1;$Data::Dumper::Sortkeys=1;
 use FindBin;
 use POSIX 'strftime';
 use Sys::Hostname;
+use Config::Simple;
+my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
 
 use MARC::Batch;
 use MARC::Record;
@@ -96,12 +101,13 @@ use e_swissbib_db;
 # ---------------------------
 # input data sets
 # ---------------------------
-my @monoSets = ( 
+my @Sets = ( 
     'BS',
     'BE',
     'BBZ',
     'EHB',
     'FREE',
+    'SFREE',
 );
 
 # ---------------------------
@@ -110,14 +116,16 @@ my @monoSets = (
 my $FULL_XML    = 'basel-bern-emedia.xml';
 my $DELTA_XML   = 'sersol-idsbb-emedia-updates.xml';
 my $DELETIONS   = 'sersol-idsbb-emedia-deletions.txt';
-my $DATA_DIR    = '/opt/data/e-books/data';
-my $DOWNLOAD_DIR= '/opt/data/e-books/download';
+
+my $DATA_DIR       =  $cfg->param('DATADIR');
+my $DOWNLOAD_DIR   =  $cfg->param('DOWNLOADDIR');
 
 chdir $DATA_DIR
     or die( "$0: cannot chdir to $DATA_DIR: $!\n");
 
 our $dbh;
 my $today = strftime("%Y-%m-%d",localtime);
+my $neltime = strftime("%y%m", localtime);
 
 step_1_write_deletion_list();
 step_2_write_delta_xml();
@@ -129,7 +137,7 @@ sub step_1_write_deletion_list {
     open(DEL,">$DELETIONS") or die "cannot write $DELETIONS: $!";
     print DEL "# date: ", $today, "\n";
 
-    my $sql="select ssid from emedia where Hol" .join('=0 and Hol', @monoSets) .'=0';
+    my $sql="select ssid from emedia where Hol" .join('=0 and Hol', @Sets) .'=0';
     my $sth=$dbh->prepare($sql);
     $sth->execute;
     while ( my $rec = $sth->fetch ) {
@@ -137,7 +145,7 @@ sub step_1_write_deletion_list {
     }
     $sth->finish;
     close DEL;
-    $sql="delete from emedia where Hol" .join('=0 and Hol', @monoSets) .'=0';
+    $sql="delete from emedia where Hol" .join('=0 and Hol', @Sets) .'=0';
     $dbh->do($sql);
 }
 
@@ -149,6 +157,13 @@ sub step_2_write_delta_xml {
     my $marcOut  = MARC::File::XML->out($DELTA_XML);
     my $sth_query = $dbh->prepare(qq|select * from emedia where ssid=? and ( modified='$today' or MARC=0)|);
     my $sth_update= $dbh->prepare(qq|update emedia set MARC=1 where ssid=?|);
+
+    my $sth_query_nel_a145 = $dbh->prepare(qq|select * from emedia where ssid=? and HolBS=2|);
+    my $sth_query_nel_b405 = $dbh->prepare(qq|select * from emedia where ssid=? and HolBE=2|);
+    my $sth_query_nel_b406 = $dbh->prepare(qq|select * from emedia where ssid=? and HolBBZ=2|);
+    my $sth_query_nel_b407 = $dbh->prepare(qq|select * from emedia where ssid=? and HolEHB=2|);
+    my $sth_query_nel_free = $dbh->prepare(qq|select * from emedia where ssid=? and HolFREE=2|);
+    
    
     while ( my $rec = $marcIn->next ) {
         my $id = $rec->field('001')->data;
@@ -157,10 +172,72 @@ sub step_2_write_delta_xml {
         next unless ( $sth_query->fetch );
         $sth_update->bind_param(1,$id);
         $sth_update->execute;
+
+        $sth_query_nel_a145->bind_param(1,$id);
+        $sth_query_nel_a145->execute;
+        my $nela145 = 1 if $sth_query_nel_a145->fetch; 
+        
+        $sth_query_nel_b405->bind_param(1,$id);
+        $sth_query_nel_b405->execute;
+        my $nelb405 = 1 if $sth_query_nel_b405->fetch; 
+
+        $sth_query_nel_b406->bind_param(1,$id);
+        $sth_query_nel_b406->execute;
+        my $nelb406 = 1 if $sth_query_nel_b406->fetch; 
+
+        $sth_query_nel_b407->bind_param(1,$id);
+        $sth_query_nel_b407->execute;
+        my $nelb407 = 1 if $sth_query_nel_b407->fetch; 
+        
+        $sth_query_nel_free->bind_param(1,$id);
+        $sth_query_nel_free->execute;
+        my $nelfree = 1 if $sth_query_nel_free->fetch; 
+        
+        my @oldfields = $rec->field('949');
+        my @newfields;
+        
+        foreach my $field ( @oldfields ) {
+            if ( $nela145 ) {
+                if ($field->subfield( 'b' ) eq 'A145') {
+                    $field->add_subfields( 'x' => "NELA145$neltime" )
+                }
+            }
+            elsif ( $nelb405 ) {
+                if ($field->subfield( 'b' ) eq 'B405') {
+                    $field->add_subfields( 'x' => "NELB405$neltime" )
+                }
+            }
+            elsif ( $nelb406 ) {
+                if ($field->subfield( 'b' ) eq 'B406') {
+                    $field->add_subfields( 'x' => "NELB406$neltime" )
+                }
+            }
+            elsif ( $nelb407 ) {
+                if ($field->subfield( 'b' ) eq 'B407') {
+                    $field->add_subfields( 'x' => "NELB407$neltime" )
+                }
+            }
+            elsif ( $nelfree ) {
+                if ($field->subfield( 'b' ) eq 'FREE') {
+                    $field->add_subfields( 'x' => "NELFREE$neltime" )
+                }
+            }
+            push(@newfields,$field);
+        }
+
+        $rec->delete_fields(@oldfields);
+        $rec->append_fields(@newfields);
         $marcOut->write($rec);
     }
+
     $marcIn->close;
     $marcOut->close;
+
+    foreach my $set ( sort @Sets ) {
+        my $sth_nela_remove  = $dbh->prepare(qq|update emedia set Hol$set=1 where Hol$set=2|);
+        $sth_nela_remove->execute;
+    }
+
     print "delta: done\n";
 }
 

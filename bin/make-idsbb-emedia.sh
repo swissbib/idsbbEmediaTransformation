@@ -1,33 +1,35 @@
 #!/bin/bash
 
-# make-idsbb-emedia.sh
-#   Skript fuer Preprocessing und Mergen der 360MARC Daten 
+# make-idsbb-emedia_test.sh
+#   Test-Skript fuer Preprocessing und Mergen der 360MARC Daten 
 # 
 # author:   
-#   andres.vonarx@unibas.ch
+#   basil.marti@unibas.ch
 #
 # history:
-#   17.12.2013/ava: produktiv fuer swissbib orange
-#   23.05.2016/ava: rewrite fuer ub-catmandu, swissbib gruen
-#   04.11.2016/bmt: anlegen und verschicken eines log-files eingerichtet 
+#   02.03.2017/bmt: test fuer swissbib orange
 
 DO_DOWNLOAD=1
 DO_MERGE=1
 DO_SYNC=1
 DO_DELTA=1
-DO_UPLOAD=1
+DO_UPLOAD=0
 DO_CLEANUP=1
 
 DATE=`date +%Y%m%d`
 LINE='------------------------------------------------'
 
+#Das Logfile idsbb_emedia.conf enthält alle Variablen, die zwischen MASTER und TEST Branch abweichen. In diesem 
+#Logfile findet sich auch der Pfad zur versteckten Logdatei ($HIDDENCONF), in dem E-Mail-Adressen und Zugangs-
+#berechtigungen zu Proquest enthalten sind. Diese Datei wird nicht nach Github exportiert. Sie liegt für MASTER und 
+#TEST in zwei Versionen vor (idsbb_emedia_hidden.conf für MASTER und idsbb_emedia_hidden_test.conf für TEST.
+
+source ./idsbb_emedia.conf
+source $HIDDENCONF
+
 BINDIR=/opt/scripts/e-books/bin
-LOGDIR=/opt/scripts/e-books/log
-DATADIR=/opt/data/e-books/data
 
 LOG=$LOGDIR/idsbb_emedia_log_$DATE.log
-MAIL_EDV="basil.marti@unibas.ch,silvia.witzig@unibas.ch,sonja.kupferschmied@unibas.ch,bernd.luchner@unibas.ch"
-MAIL_ERM="barbara.kurz@unibas.ch,database-ub@unibas.ch,beatrice.frick@ehb.swiss,petra.bertschy@bzpflege.ch,jan.stutzmann@ub.unibe.ch,esupport@ub.unibe.ch"
 
 INFOMAIL=$BINDIR/idsbb_emedia_infomail.txt
 STATS=$DATADIR/statistik.txt
@@ -118,7 +120,7 @@ cp $STATS $STATS_ARCH
 cp $SHADOW_STATS $SHADOW_STATS_ARCH
 
 # Log-Datei an EDV nach jedem Lauf verschicken:
-cat $LOG | mailx -a "From:basil.marti@unibas.ch" -s "Logfile: E-Media-Metadaten vom $DATE nach Swissbib exportiert" $MAIL_EDV
-cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "Infomail: E-Media-Metadaten vom $DATE nach Swissbib exportiert" $MAIL_EDV
+cat $LOG | mailx -a "From:basil.marti@unibas.ch" -s "Logfile: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
+cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "Infomail: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
 # Info-Mail an ERM-Abteilungen nach jedem Lauf verschicken:
 cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "E-Media-Metadaten vom $DATE nach Swissbib exportiert" $MAIL_ERM
