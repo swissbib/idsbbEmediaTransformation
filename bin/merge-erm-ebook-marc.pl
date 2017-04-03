@@ -79,6 +79,10 @@ use FindBin;
 use HTML::Entities();
 use POSIX 'strftime';
 use Sys::Hostname;
+use Config::Simple;
+
+my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
+
 binmode(STDOUT,":utf8");
 
 use strict;
@@ -100,8 +104,7 @@ my @Sets = (
 # ---------------------------
 # local files and dirs
 # ---------------------------
-my $DATA_DIR = '/opt/data/e-books_test/data';
-#my $DATA_DIR = '/opt/data/e-books/data';
+my $DATA_DIR = $cfg->param('DATADIR');
 
 chdir $DATA_DIR
     or die( "$0: cannot chdir to $DATA_DIR: $!\n");

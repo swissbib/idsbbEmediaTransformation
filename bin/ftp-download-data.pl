@@ -21,7 +21,7 @@ CAVEAT:
 History
     2016.06.08  rewrite fuer merge und delta/ava
     2016.10.12  added FREE instance/ava
-    2017.03.31  added support for serial
+    2017.03.31  added support for serials
 
 Autor
     andres.vonarx@unibas.ch
@@ -34,15 +34,19 @@ use File::Copy;
 use File::Spec;
 use Net::FTP;
 use Sys::Hostname;
+use Config::Simple;
+my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
+my $cfg_hidden = new Config::Simple($cfg->param('HIDDENCONF'));
+
 use strict;
 
 # ---------------------------
 # ftp configuration
 # ---------------------------
 my ($ftp,$ftp_error);
-my $ftp_host = 'ftp.serialssolutions.com';
-my $be = ['SV2QT7ZB3K','lU1VHsnk'];
-my $bs = ['BZ2LE9PU8C','GE8dAFbN'];
+my $ftp_host = $cfg_hidden->param('ftp_host');
+my $be = [ $cfg_hidden->param('be_user'), $cfg_hidden->param('be_pw') ];
+my $bs = [ $cfg_hidden->param('bs_user'), $cfg_hidden->param('bs_pw') ];
 
 my $quiet = 0;  # do not output messages if true
 
@@ -73,10 +77,10 @@ my $downloads = {
 # local files and dirs
 # ---------------------------
 my($DATA_DIR,$DOWNLOAD_DIR);
-$DATA_DIR       = '/opt/data/e-books_test/data';
-$DOWNLOAD_DIR   = '/opt/data/e-books_test/download';
-#$DATA_DIR       = '/opt/data/e-books/data';
-#$DOWNLOAD_DIR   = '/opt/data/e-books/download';
+
+$DATA_DIR       =  $cfg->param('DATADIR');
+$DOWNLOAD_DIR   =  $cfg->param('DOWNLOADDIR');
+
 chdir $DOWNLOAD_DIR
     or die( "$0: cannot chdir to $DOWNLOAD_DIR: $!\n");
 my $MONO_RUN_SUMMARY = $DATA_DIR .'/RunSummary-Mono.txt';

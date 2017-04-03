@@ -13,23 +13,23 @@ DO_DOWNLOAD=1
 DO_MERGE=1
 DO_SYNC=1
 DO_DELTA=1
-DO_UPLOAD=1
+DO_UPLOAD=0
 DO_CLEANUP=1
 
 DATE=`date +%Y%m%d`
 LINE='------------------------------------------------'
 
-BINDIR=/opt/scripts/e-books/bin
-LOGDIR=/opt/scripts/e-books_test/log
-DATADIR=/opt/data/e-books_test/data
-#LOGDIR=/opt/scripts/e-books/log
-#DATADIR=/opt/data/e-books/data
+#Das Logfile idsbb_emedia.conf enthält alle Variablen, die zwischen MASTER und TEST Branch abweichen. In diesem 
+#Logfile findet sich auch der Pfad zur versteckten Logdatei ($HIDDENCONF), in dem E-Mail-Adressen und Zugangs-
+#berechtigungen zu Proquest enthalten sind. Diese Datei wird nicht nach Github exportiert. Sie liegt für MASTER und 
+#TEST in zwei Versionen vor (idsbb_emedia_hidden.conf für MASTER und idsbb_emedia_hidden_test.conf für TEST.
 
-LOG=$LOGDIR/idsbb_emedia_log_test_$DATE.log
-MAIL_EDV="basil.marti@unibas.ch"
-MAIL_ERM=""
-#MAIL_EDV="basil.marti@unibas.ch,silvia.witzig@unibas.ch,sonja.kupferschmied@unibas.ch,bernd.luchner@unibas.ch"
-#MAIL_ERM="barbara.kurz@unibas.ch,database-ub@unibas.ch,beatrice.frick@ehb.swiss,petra.bertschy@bzpflege.ch,jan.stutzmann@ub.unibe.ch,esupport@ub.unibe.ch"
+source ./idsbb_emedia.conf
+source $HIDDENCONF
+
+BINDIR=/opt/scripts/e-books/bin
+
+LOG=$LOGDIR/idsbb_emedia_log_$DATE.log
 
 INFOMAIL=$BINDIR/idsbb_emedia_infomail.txt
 STATS=$DATADIR/statistik.txt

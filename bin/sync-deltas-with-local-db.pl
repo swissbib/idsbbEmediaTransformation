@@ -38,6 +38,8 @@ use Data::Dumper; $Data::Dumper::Indent=1;$Data::Dumper::Sortkeys=1;
 use FindBin;
 use POSIX 'strftime';
 use Sys::Hostname;
+use Config::Simple;
+my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
 
 binmode(STDOUT,":utf8");
 use strict;
@@ -61,10 +63,9 @@ my @Sets = (
 # local files and dirs
 # ---------------------------
 my($DATA_DIR,$DOWNLOAD_DIR);
-$DATA_DIR       = '/opt/data/e-books_test/data';
-$DOWNLOAD_DIR   = '/opt/data/e-books_test/download';
-#$DATA_DIR       = '/opt/data/e-books/data';
-#$DOWNLOAD_DIR   = '/opt/data/e-books/download';
+$DATA_DIR       =  $cfg->param('DATADIR');
+$DOWNLOAD_DIR   =  $cfg->param('DOWNLOADDIR'); 
+
 chdir $DOWNLOAD_DIR
     or die( "$0: cannot chdir to $DOWNLOAD_DIR: $!\n");
 my $STATS = $DATA_DIR .'/statistik.txt';
@@ -183,3 +184,4 @@ sub insert_or_update_new {
         $sql = "insert into emedia set ssid='$id',$HOL=2,modified='$today'";
     }
     $dbh->do($sql);
+}

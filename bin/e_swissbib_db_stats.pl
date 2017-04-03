@@ -15,6 +15,8 @@ use Data::Dumper; $Data::Dumper::Indent=1;$Data::Dumper::Sortkeys=1;
 use FindBin;
 use POSIX 'strftime';
 use Sys::Hostname;
+use Config::Simple;
+my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
 
 binmode(STDOUT,":utf8");
 use strict;
@@ -37,8 +39,7 @@ my @Sets = (
 # ---------------------------
 # local files and dirs
 # ---------------------------
-my $DATA_DIR = '/opt/data/e-books_test/data';
-#my $DATA_DIR = '/opt/data/e-books/data';
+my $DATA_DIR = $cfg->param('DATADIR'); 
 my $STATS = $DATA_DIR .'/shadow_statistik.txt';
 open(F,">$STATS") or die "cannot append to $STATS: $!";
 

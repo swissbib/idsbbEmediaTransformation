@@ -84,6 +84,8 @@ use Data::Dumper; $Data::Dumper::Indent=1;$Data::Dumper::Sortkeys=1;
 use FindBin;
 use POSIX 'strftime';
 use Sys::Hostname;
+use Config::Simple;
+my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
 
 use MARC::Batch;
 use MARC::Record;
@@ -114,10 +116,9 @@ my @Sets = (
 my $FULL_XML    = 'basel-bern-emedia.xml';
 my $DELTA_XML   = 'sersol-idsbb-emedia-updates.xml';
 my $DELETIONS   = 'sersol-idsbb-emedia-deletions.txt';
-my $DATA_DIR    = '/opt/data/e-books_test/data';
-my $DOWNLOAD_DIR= '/opt/data/e-books_test/download';
-#my $DATA_DIR    = '/opt/data/e-books/data';
-#my $DOWNLOAD_DIR= '/opt/data/e-books/download';
+
+my $DATA_DIR       =  $cfg->param('DATADIR');
+my $DOWNLOAD_DIR   =  $cfg->param('DOWNLOADDIR');
 
 chdir $DATA_DIR
     or die( "$0: cannot chdir to $DATA_DIR: $!\n");
