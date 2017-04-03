@@ -1,5 +1,6 @@
 log/
 bin/nohup.out
+bin/devel/nohup.out
 bin/*.20*bmt
 bin/idsbb_emedia_hidden.conf
 bin/idsbb_emedia_hidden_test.conf
