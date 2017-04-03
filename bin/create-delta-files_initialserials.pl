@@ -103,8 +103,8 @@ my @Sets = (
 # ---------------------------
 my $FULL_XML    = 'basel-bern-emedia.xml';
 my $DELTA_XML   = 'sersol-idsbb-emedia-initialserials.xml';
-my $DATA_DIR    = '/opt/data/e-books_test/data';
-my $DOWNLOAD_DIR= '/opt/data/e-books_test/download';
+my $DATA_DIR    = '/opt/data/e-books/data';
+my $DOWNLOAD_DIR= '/opt/data/e-books/download';
 #my $DATA_DIR    = '/opt/data/e-books/data';
 #my $DOWNLOAD_DIR= '/opt/data/e-books/download';
 

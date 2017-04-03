@@ -37,7 +37,7 @@ use POSIX qw(strftime);
 use Sys::Hostname;
 binmode(STDOUT,":utf8");
 use lib '..';
-use e_swissbib_db_test;
+use e_swissbib_db;
 use strict;
 
 my $host = which_db_host();
@@ -60,7 +60,7 @@ print strftime("START: %Y-%m-%d %H:%M:%S\n",localtime);
 
 my $XML;
 if ( hostname eq 'ub-catmandu' ) {
-    $XML='/opt/data/e-books_test/data/basel-bern-emedia.xml';
+    $XML='/opt/data/e-books/data/basel-bern-emedia.xml';
 } else {
     $XML = '../../data/basel-bern-emedia.xml';
 }
@@ -79,7 +79,7 @@ while ( my $rec = $marc->next() ) {
         my $sub = $f->subfield('b');
         if ( $sub eq 'FREE' ) {
             $HolSFREE=1;
-            my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE,1,'$today')|;
+            my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE)|;
             $dbh->do($sql);
             unless ( $pacif-- ) {
                 $pacif = $PACIF;

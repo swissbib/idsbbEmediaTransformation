@@ -47,9 +47,9 @@ table:  e_swissbib.emedia
 source: basel-bern-emedia.xml
 
 EOD
-print "komplett neu aufbauen [j/N] ? ";
-my $ans = <STDIN>;
-exit unless $ans =~ /j/i;
+#print "komplett neu aufbauen [j/N] ? ";
+#my $ans = <STDIN>;
+#exit unless $ans =~ /j/i;
 
 my $PACIF = 500;
 my $pacif = $PACIF;
@@ -67,13 +67,13 @@ if ( hostname eq 'ub-catmandu' ) {
 my $marc =  MARC::File::XML->in($XML);
 
 our $dbh;
-$dbh->do('truncate table emedia');
+#$dbh->do('truncate table emedia');
 
 my $today = strftime("%Y-%m-%d",localtime);
 while ( my $rec = $marc->next() ) {
     my $ssid = $rec->field('001')->data;
-    my($HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE);
-    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = 0;
+    my($HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE);
+    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = $HolSFREE = 0;
     foreach my $f ( $rec->field('949') ){
         my $sub = $f->subfield('b');
         if ( $sub eq 'A145' ) {
@@ -90,7 +90,7 @@ while ( my $rec = $marc->next() ) {
             die("949 \$b = $sub: dieses Sigel kenne ich nicht!");
         }
     }
-    my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today')|;
+    my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE)|;
     $dbh->do($sql);
     unless ( $pacif-- ) {
         $pacif = $PACIF;
