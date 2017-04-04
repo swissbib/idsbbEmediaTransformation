@@ -22,6 +22,7 @@ ACHTUNG:
     
 History:
     09.06.2016 - andres.vonarx@unibas.ch
+    04.04.2017 - basil.marti@unibas.ch: Anpassung fuer E-Serials
 
 =cut
 
@@ -47,7 +48,7 @@ table:  e_swissbib.emedia
 source: basel-bern-emedia.xml
 
 EOD
-#print "komplett neu aufbauen [j/N] ? ";
+#@print "komplett neu aufbauen [j/N] ? ";
 #my $ans = <STDIN>;
 #exit unless $ans =~ /j/i;
 
@@ -67,7 +68,7 @@ if ( hostname eq 'ub-catmandu' ) {
 my $marc =  MARC::File::XML->in($XML);
 
 our $dbh;
-#$dbh->do('truncate table emedia');
+$dbh->do('truncate table emedia');
 
 my $today = strftime("%Y-%m-%d",localtime);
 while ( my $rec = $marc->next() ) {
@@ -86,10 +87,16 @@ while ( my $rec = $marc->next() ) {
             $HolEHB=1;
         } elsif ( $sub eq 'FREE' ) {
             $HolFREE=1;
-        } else {
-            die("949 \$b = $sub: dieses Sigel kenne ich nicht!");
+        } 
+    }
+    
+    foreach my $f ( $rec->field('852') ){
+        my $sub = $f->subfield('b');
+        if ( $sub eq 'FREE' ) {
+            $HolSFREE=1;
         }
     }
+    
     my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE)|;
     $dbh->do($sql);
     unless ( $pacif-- ) {
