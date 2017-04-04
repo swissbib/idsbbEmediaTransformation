@@ -9,11 +9,11 @@
 # history:
 #   02.03.2017/bmt: test fuer swissbib orange
 
-DO_DOWNLOAD=0
-DO_MERGE=0
+DO_DOWNLOAD=1
+DO_MERGE=1
 DO_SYNC=1
-DO_DELTA=0
-DO_UPLOAD=0
+DO_DELTA=1
+DO_UPLOAD=1
 DO_CLEANUP=1
 
 DATE=`date +%Y%m%d`
@@ -104,8 +104,9 @@ fi
 
 if [ "$DO_UPLOAD" == "1" ]; then
     echo "* upload data" >> $LOG
-	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
-	scp sersol-idsbb-emedia-deletions.txt harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
+        #Auskommentiert, da TEST branch keine Daten an swissbib liefern soll.	
+        #scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
+	#scp sersol-idsbb-emedia-deletions.txt harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
 fi
 
 if [ "$DO_CLEANUP" == "1" ]; then
