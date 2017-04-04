@@ -2,7 +2,7 @@
 
 =for doku
 
-initial-load-e_swissbib-db_test.pl
+initial-load-e_swissbib-db.pl
     Das Skript initialisiert die DB-Tabelle e_swissbib.emedia.
     
 Input: 
@@ -22,7 +22,7 @@ ACHTUNG:
     
 History:
     09.06.2016 - andres.vonarx@unibas.ch
-    02.03.2017 - basil.marti@unibas.ch // Testversion
+    04.04.2017 - basil.marti@unibas.ch: Anpassung fuer E-Serials
 
 =cut
 
@@ -48,7 +48,7 @@ table:  e_swissbib.emedia
 source: basel-bern-emedia.xml
 
 EOD
-print "komplett neu aufbauen [j/N] ? ";
+@print "komplett neu aufbauen [j/N] ? ";
 my $ans = <STDIN>;
 exit unless $ans =~ /j/i;
 
@@ -61,7 +61,6 @@ print strftime("START: %Y-%m-%d %H:%M:%S\n",localtime);
 my $XML;
 if ( hostname eq 'ub-catmandu' ) {
     $XML='/opt/data/e-books_test/data/basel-bern-emedia.xml';
-    #$XML='/opt/data/e-books/data/basel-bern-emedia.xml';
 } else {
     $XML = '../../data/basel-bern-emedia.xml';
 }
@@ -88,16 +87,16 @@ while ( my $rec = $marc->next() ) {
             $HolEHB=1;
         } elsif ( $sub eq 'FREE' ) {
             $HolFREE=1;
-        } else {
-            die("949 \$b = $sub: dieses Sigel kenne ich nicht!");
-        }
+        } 
     }
-    foreach my $g ( $rec->field('852') ){
-        my $sub = $g->subfield('b');
+    
+    foreach my $f ( $rec->field('852') ){
+        my $sub = $f->subfield('b');
         if ( $sub eq 'FREE' ) {
             $HolSFREE=1;
         }
     }
+    
     my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE)|;
     $dbh->do($sql);
     unless ( $pacif-- ) {

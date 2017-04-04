@@ -9,10 +9,10 @@
 # history:
 #   02.03.2017/bmt: test fuer swissbib orange
 
-DO_DOWNLOAD=1
-DO_MERGE=1
+DO_DOWNLOAD=0
+DO_MERGE=0
 DO_SYNC=1
-DO_DELTA=1
+DO_DELTA=0
 DO_UPLOAD=0
 DO_CLEANUP=1
 

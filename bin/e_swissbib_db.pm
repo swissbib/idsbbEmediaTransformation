@@ -2,14 +2,15 @@
 # 09.06.2016 andres.vonarx@unibas.ch
 
 use DBI;
+use Config::Simple;
+my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
+my $cfg_hidden = new Config::Simple($cfg->param('HIDDENCONF'));
 use strict;
 
 my $DBHOST     = 'localhost';
-#my $DBHOST     = 'ub-filesvm';
 my $DB_NAME    = 'e_swissbib_test';
-#my $DB_NAME    = 'e_swissbib';
 my $DBUSER     = 'e_swissbib_staff';
-my $DBPASSWORD = 'x0vA82';
+my $DBPASSWORD = $cfg_hidden->param('DBPASSWORD');
 
 our $dbh = DBI->connect( "DBI:mysql:database=$DB_NAME;host=$DBHOST", 
         $DBUSER, $DBPASSWORD, {RaiseError => 1, PrintError => 0});
