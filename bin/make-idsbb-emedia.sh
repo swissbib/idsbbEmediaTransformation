@@ -15,6 +15,7 @@ DO_SYNC=1
 DO_DELTA=1
 DO_UPLOAD=1
 DO_CLEANUP=1
+DO_EMAIL=1
 
 DATE=`date +%Y%m%d`
 LINE='------------------------------------------------'
@@ -104,9 +105,8 @@ fi
 
 if [ "$DO_UPLOAD" == "1" ]; then
     echo "* upload data" >> $LOG
-        #Auskommentiert, da TEST branch keine Daten an swissbib liefern soll.	
-        #scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
-	#scp sersol-idsbb-emedia-deletions.txt harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
+	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
+	scp sersol-idsbb-emedia-deletions.txt harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
 fi
 
 if [ "$DO_CLEANUP" == "1" ]; then
@@ -120,8 +120,10 @@ printf 'END ' && date >> $LOG
 cp $STATS $STATS_ARCH
 cp $SHADOW_STATS $SHADOW_STATS_ARCH
 
-# Log-Datei an EDV nach jedem Lauf verschicken:
-cat $LOG | mailx -a "From:basil.marti@unibas.ch" -s "Logfile: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
-cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "Infomail: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
-# Info-Mail an ERM-Abteilungen nach jedem Lauf verschicken:
-cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "E-Media-Metadaten vom $DATE nach Swissbib exportiert" $MAIL_ERM
+if [ "$DO_EMAIL" == "1" ]; then
+    # Log-Datei an EDV nach jedem Lauf verschicken:
+    cat $LOG | mailx -a "From:basil.marti@unibas.ch" -s "Logfile: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
+    cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "Infomail: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
+    # Info-Mail an ERM-Abteilungen nach jedem Lauf verschicken:
+    cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "E-Media-Metadaten vom $DATE nach Swissbib exportiert" $MAIL_ERM
+fi
