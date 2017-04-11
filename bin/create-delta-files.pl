@@ -202,22 +202,26 @@ sub step_2_write_delta_xml {
                     $field->add_subfields( 'x' => "NELA145$neltime" )
                 }
             }
-            elsif ( $nelb405 ) {
+            
+            if ( $nelb405 ) {
                 if ($field->subfield( 'b' ) eq 'B405') {
                     $field->add_subfields( 'x' => "NELB405$neltime" )
                 }
             }
-            elsif ( $nelb406 ) {
+            
+            if ( $nelb406 ) {
                 if ($field->subfield( 'b' ) eq 'B406') {
                     $field->add_subfields( 'x' => "NELB406$neltime" )
                 }
             }
-            elsif ( $nelb407 ) {
+
+            if ( $nelb407 ) {
                 if ($field->subfield( 'b' ) eq 'B407') {
                     $field->add_subfields( 'x' => "NELB407$neltime" )
                 }
             }
-            elsif ( $nelfree ) {
+
+            if ( $nelfree ) {
                 if ($field->subfield( 'b' ) eq 'FREE') {
                     $field->add_subfields( 'x' => "NELFREE$neltime" )
                 }
