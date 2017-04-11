@@ -9,12 +9,13 @@
 # history:
 #   02.03.2017/bmt: test fuer swissbib orange
 
-DO_DOWNLOAD=0
-DO_MERGE=0
+DO_DOWNLOAD=1
+DO_MERGE=1
 DO_SYNC=1
-DO_DELTA=0
+DO_DELTA=1
 DO_UPLOAD=0
-DO_CLEANUP=1
+DO_CLEANUP=0
+DO_EMAIL=0
 
 DATE=`date +%Y%m%d`
 LINE='------------------------------------------------'
@@ -119,8 +120,10 @@ printf 'END ' && date >> $LOG
 cp $STATS $STATS_ARCH
 cp $SHADOW_STATS $SHADOW_STATS_ARCH
 
-# Log-Datei an EDV nach jedem Lauf verschicken:
-cat $LOG | mailx -a "From:basil.marti@unibas.ch" -s "Logfile: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
-cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "Infomail: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
-# Info-Mail an ERM-Abteilungen nach jedem Lauf verschicken:
-cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "E-Media-Metadaten vom $DATE nach Swissbib exportiert" $MAIL_ERM
+if [ "$DO_EMAIL" == "1" ]; then
+    # Log-Datei an EDV nach jedem Lauf verschicken:
+    cat $LOG | mailx -a "From:basil.marti@unibas.ch" -s "Logfile: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
+    cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "Infomail: E-Media-Metadaten vom $DATE generiert" $MAIL_EDV
+    # Info-Mail an ERM-Abteilungen nach jedem Lauf verschicken:
+    cat $INFOMAIL $STATS_ARCH| mailx -a "From:basil.marti@unibas.ch" -s "E-Media-Metadaten vom $DATE nach Swissbib exportiert" $MAIL_ERM
+fi
