@@ -106,9 +106,9 @@ fi
 if [ "$DO_UPLOAD" == "1" ]; then
     echo "* upload data" >> $LOG
 	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
-	#scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
+	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
 	scp sersol-idsbb-emedia-deletions.txt harvester@sb-coai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
-	#scp sersol-idsbb-emedia-deletions.txt harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
+	scp sersol-idsbb-emedia-deletions.txt harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
 fi
 
 if [ "$DO_CLEANUP" == "1" ]; then
