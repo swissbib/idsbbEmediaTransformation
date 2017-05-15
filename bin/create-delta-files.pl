@@ -110,6 +110,15 @@ my @Sets = (
     'SFREE',
 );
 
+my %Codes = (
+    'BS'   => 'A145',
+    'BE'   => 'B405',
+    'BBZ'  => 'B406',
+    'EHB'  => 'B407',
+    'FREE' => 'FREE',
+    'SFREE'=> 'FREE',
+);
+
 # ---------------------------
 # local files and dirs
 # ---------------------------
@@ -125,7 +134,6 @@ chdir $DATA_DIR
 
 our $dbh;
 my $today = strftime("%Y-%m-%d",localtime);
-my $neltime = strftime("%y%m", localtime);
 
 step_1_write_deletion_list();
 step_2_write_delta_xml();
@@ -158,13 +166,6 @@ sub step_2_write_delta_xml {
     my $sth_query = $dbh->prepare(qq|select * from emedia where ssid=? and ( modified='$today' or MARC=0)|);
     my $sth_update= $dbh->prepare(qq|update emedia set MARC=1 where ssid=?|);
 
-    my $sth_query_nel_a145 = $dbh->prepare(qq|select * from emedia where ssid=? and HolBS=2|);
-    my $sth_query_nel_b405 = $dbh->prepare(qq|select * from emedia where ssid=? and HolBE=2|);
-    my $sth_query_nel_b406 = $dbh->prepare(qq|select * from emedia where ssid=? and HolBBZ=2|);
-    my $sth_query_nel_b407 = $dbh->prepare(qq|select * from emedia where ssid=? and HolEHB=2|);
-    my $sth_query_nel_free = $dbh->prepare(qq|select * from emedia where ssid=? and HolFREE=2|);
-    
-   
     while ( my $rec = $marcIn->next ) {
         my $id = $rec->field('001')->data;
         $sth_query->bind_param(1,$id);
@@ -172,58 +173,19 @@ sub step_2_write_delta_xml {
         next unless ( $sth_query->fetch );
         $sth_update->bind_param(1,$id);
         $sth_update->execute;
-
-        $sth_query_nel_a145->bind_param(1,$id);
-        $sth_query_nel_a145->execute;
-        my $nela145 = 1 if $sth_query_nel_a145->fetch; 
-        
-        $sth_query_nel_b405->bind_param(1,$id);
-        $sth_query_nel_b405->execute;
-        my $nelb405 = 1 if $sth_query_nel_b405->fetch; 
-
-        $sth_query_nel_b406->bind_param(1,$id);
-        $sth_query_nel_b406->execute;
-        my $nelb406 = 1 if $sth_query_nel_b406->fetch; 
-
-        $sth_query_nel_b407->bind_param(1,$id);
-        $sth_query_nel_b407->execute;
-        my $nelb407 = 1 if $sth_query_nel_b407->fetch; 
-        
-        $sth_query_nel_free->bind_param(1,$id);
-        $sth_query_nel_free->execute;
-        my $nelfree = 1 if $sth_query_nel_free->fetch; 
-        
+            
         my @oldfields = $rec->field('949');
         my @newfields;
-        
+
         foreach my $field ( @oldfields ) {
-            if ( $nela145 ) {
-                if ($field->subfield( 'b' ) eq 'A145') {
-                    $field->add_subfields( 'x' => "NELA145$neltime" )
-                }
-            }
+            foreach my $set (@Sets) {
+                my $sth_query_nel = $dbh->prepare(qq|select Nel$set from emedia where ssid=? and Hol$set=1|);
+                $sth_query_nel->bind_param(1,$id);
+                $sth_query_nel->execute;
+                my $nel = $sth_query_nel->fetchrow_array();
             
-            if ( $nelb405 ) {
-                if ($field->subfield( 'b' ) eq 'B405') {
-                    $field->add_subfields( 'x' => "NELB405$neltime" )
-                }
-            }
-            
-            if ( $nelb406 ) {
-                if ($field->subfield( 'b' ) eq 'B406') {
-                    $field->add_subfields( 'x' => "NELB406$neltime" )
-                }
-            }
-
-            if ( $nelb407 ) {
-                if ($field->subfield( 'b' ) eq 'B407') {
-                    $field->add_subfields( 'x' => "NELB407$neltime" )
-                }
-            }
-
-            if ( $nelfree ) {
-                if ($field->subfield( 'b' ) eq 'FREE') {
-                    $field->add_subfields( 'x' => "NELFREE$neltime" )
+                if ($field->subfield( 'b' ) =~ /$Codes{$set}/) {
+                    $field->add_subfields( 'x' => ('NEL' . $Codes{$set} . $nel  )) if $nel;
                 }
             }
             push(@newfields,$field);
@@ -236,11 +198,6 @@ sub step_2_write_delta_xml {
 
     $marcIn->close;
     $marcOut->close;
-
-    foreach my $set ( sort @Sets ) {
-        my $sth_nela_remove  = $dbh->prepare(qq|update emedia set Hol$set=1 where Hol$set=2|);
-        $sth_nela_remove->execute;
-    }
 
     print "delta: done\n";
 }
