@@ -77,6 +77,7 @@ my $stats;
 our $dbh;    
 my $sth = $dbh->prepare("select ssid from emedia where ssid=?");
 my $today = strftime("%Y-%m-%d",localtime);
+my $neltime = strftime("%y%m", localtime);
 
 my $MONO_RUN_SUMMARY = $DATA_DIR .'/RunSummary-Mono-Delta.txt';
 unlink $MONO_RUN_SUMMARY;
@@ -174,14 +175,15 @@ sub insert_or_update_new {
 # ---------------------------
     my($id,$set)=@_;
     my $HOL = "Hol$set";
+    my $NEL = "Nel$set";
     $sth->bind_param(1,$id);
     $sth->execute;
     my $sql;
     my ($rec) = $sth->fetchrow_arrayref;
     if ( $rec ) {
-        $sql = "update emedia set $HOL=2,modified='$today' where ssid='$id'";
+        $sql = "update emedia set $HOL=1,$NEL=$neltime,modified='$today' where ssid='$id'";
     } else {
-        $sql = "insert into emedia set ssid='$id',$HOL=2,modified='$today'";
+        $sql = "insert into emedia set ssid='$id',$HOL=1,$NEL=$neltime,modified='$today'";
     }
     $dbh->do($sql);
 }
