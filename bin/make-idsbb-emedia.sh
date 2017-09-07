@@ -14,6 +14,7 @@ DO_MERGE=1
 DO_SYNC=1
 DO_DELTA=1
 DO_UPLOAD=1
+DO_SAVE=1
 DO_CLEANUP=1
 DO_EMAIL=1
 
@@ -107,6 +108,12 @@ if [ "$DO_UPLOAD" == "1" ]; then
     echo "* upload data" >> $LOG
 	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./ &>> $LOG
 	scp sersol-idsbb-emedia-deletions.txt harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./ &>> $LOG
+fi
+
+if [ "$DO_SAVE" == "1" ]; then
+    echo "* saving data" >> $LOG
+	cp sersol-idsbb-emedia-updates-reformatted.xml.gz backup/sersol-idsbb-emedia-updates-reformatted-$DATE.xml.gz &>> $LOG
+	cp sersol-idsbb-emedia-deletions.txt backup/sersol-idsbb-emedia-deletions-$DATE.txt &>> $LOG
 fi
 
 if [ "$DO_CLEANUP" == "1" ]; then
