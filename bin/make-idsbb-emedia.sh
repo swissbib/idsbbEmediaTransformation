@@ -20,8 +20,8 @@ DO_EMAIL=1
 DATE=`date +%Y%m%d`
 LINE='------------------------------------------------'
 
-#Das Logfile idsbb_emedia.conf enthält alle Variablen, die zwischen MASTER und TEST Branch abweichen. In diesem 
-#Logfile findet sich auch der Pfad zur versteckten Logdatei ($HIDDENCONF), in dem E-Mail-Adressen und Zugangs-
+#Das Conffile idsbb_emedia.conf enthält alle Variablen, die zwischen MASTER und TEST Branch abweichen. In diesem 
+#Confile findet sich auch der Pfad zur versteckten Confdatei ($HIDDENCONF), in dem E-Mail-Adressen und Zugangs-
 #berechtigungen zu Proquest enthalten sind. Diese Datei wird nicht nach Github exportiert. Sie liegt für MASTER und 
 #TEST in zwei Versionen vor (idsbb_emedia_hidden.conf für MASTER und idsbb_emedia_hidden_test.conf für TEST.
 
@@ -48,7 +48,7 @@ cd $DATADIR
 
 if [ "$DO_DOWNLOAD" == "1" ]; then
     echo "* download and extract data" >> $LOG
-    perl $BINDIR/ftp-download-data.pl
+    perl $BINDIR/ftp-download-data.pl &>> $LOG
     if [ "$?" !=  "0" ]; then
         exit;
     fi
@@ -59,7 +59,7 @@ if [ "$DO_MERGE" == "1" ]; then
     echo "* [please be patient for about 30 minutes...]" >> $LOG
     rm -f tmp.xml
     rm -f basel-bern-emedia.xml
-    perl $BINDIR/merge-erm-ebook-marc.pl
+    perl $BINDIR/merge-erm-ebook-marc.pl &>> $LOG
     if [ "$?" !=  "0" ]; then
         exit;
 
@@ -73,7 +73,7 @@ fi
     
 if [ "$DO_SYNC" == "1" ]; then
     echo "* synchronizing MySQL database" >> $LOG
-    perl $BINDIR/sync-deltas-with-local-db.pl
+    perl $BINDIR/sync-deltas-with-local-db.pl &>> $LOG
     if [ "$?" !=  "0" ]; then
         exit;
     fi
@@ -85,7 +85,7 @@ if [ "$DO_DELTA" == "1" ]; then
     rm -f sersol-idsbb-emedia-updates.xml
     rm -f sersol-idsbb-emedia-updates.xml.gz
     rm -f sersol-idsbb-emedia-deletions.txt
-    perl $BINDIR/create-delta-files.pl
+    perl $BINDIR/create-delta-files.pl &>> $LOG
     if [ "$?" !=  "0" ]; then
         exit;
     fi
@@ -95,9 +95,9 @@ if [ "$DO_DELTA" == "1" ]; then
         exit;
     fi
     echo "* gzipping xml" >> $LOG
-    gzip -f sersol-idsbb-emedia-updates-reformatted.xml
+    gzip -f sersol-idsbb-emedia-updates-reformatted.xml &>> $LOG
     echo "* writing stats" >> $LOG
-    perl $BINDIR/e_swissbib_db_stats.pl
+    perl $BINDIR/e_swissbib_db_stats.pl &>> $LOG
     if [ "$?" !=  "0" ]; then
         exit;
     fi
@@ -105,20 +105,20 @@ fi
 
 if [ "$DO_UPLOAD" == "1" ]; then
     echo "* upload data" >> $LOG
-	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./
-	scp sersol-idsbb-emedia-deletions.txt harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./
+	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./ &>> $LOG
+	scp sersol-idsbb-emedia-deletions.txt harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./ &>> $LOG
 fi
 
 if [ "$DO_CLEANUP" == "1" ]; then
     echo "* clean up temp files" >> $LOG
-    rm -f *.mrc
-    rm -f tmp.xml
+    rm -f *.mrc &>> $LOG
+    rm -f tmp.xml &>> $LOG
 fi
 
 printf 'END ' && date >> $LOG
 
-cp $STATS $STATS_ARCH
-cp $SHADOW_STATS $SHADOW_STATS_ARCH
+cp $STATS $STATS_ARCH &>> $LOG
+cp $SHADOW_STATS $SHADOW_STATS_ARCH &>> $LOG
 
 if [ "$DO_EMAIL" == "1" ]; then
     # Log-Datei an EDV nach jedem Lauf verschicken:
