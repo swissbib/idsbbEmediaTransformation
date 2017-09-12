@@ -136,7 +136,7 @@ print F <<EOD;
 new/changed/deleted 360MARC messages:
 -----------------------------------------------------
 EOD
-foreach my $key (sort keys $stats ) {
+foreach my $key (sort keys %$stats ) {
     printf F ("%-8.8s | new:%8.8s | chg:%8.8s | del:%8.8s\n",
         $key,
         pnum($stats->{$key}->{new}), 
