@@ -4,7 +4,7 @@ Die E-Media-Metadaten aus Intota wurden soeben erfolgreich aufbereitet und nach 
 Die Daten werden in Swissbib in der naechsten Nacht verarbeitet und sind am Folgetag ab Mittag in 
 Swissbib und Swissbib Basel Bern mit "WaSeSS*" recherchierbar.
 
-Siehe auch http://www.ub.unibas.ch/babette/index.php/E-Book_Marc_Records_fuer_Swissbib
+Siehe auch http://www.ub.unibas.ch/babette/index.php/E-Ressourcen_Marc_Records_fuer_Swissbib
 
 Herzlich 
 
