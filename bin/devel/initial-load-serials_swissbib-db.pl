@@ -60,7 +60,7 @@ print strftime("START: %Y-%m-%d %H:%M:%S\n",localtime);
 
 my $XML;
 if ( hostname eq 'ub-catmandu' ) {
-    $XML='/opt/data/e-books_test/data/basel-bern-emedia.xml';
+    $XML='/opt/data/e-books/data/basel-bern-emedia.xml';
 } else {
     $XML = '../../data/basel-bern-emedia.xml';
 }

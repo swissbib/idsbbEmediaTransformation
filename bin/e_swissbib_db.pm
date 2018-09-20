@@ -7,8 +7,8 @@ my $cfg = new Config::Simple('/opt/scripts/e-books/bin/idsbb_emedia.conf');
 my $cfg_hidden = new Config::Simple($cfg->param('HIDDENCONF'));
 use strict;
 
-my $DBHOST     = 'localhost';
-my $DB_NAME    = 'e_swissbib_test';
+my $DBHOST     = 'ub-filesvm';
+my $DB_NAME    = 'e_swissbib';
 my $DBUSER     = 'e_swissbib_staff';
 my $DBPASSWORD = $cfg_hidden->param('DBPASSWORD');
 

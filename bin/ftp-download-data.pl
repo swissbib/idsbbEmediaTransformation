@@ -233,7 +233,6 @@ sub extract_mono_full {
     unlink $MONO_RUN_SUMMARY;
     unlink 'RunSummary.txt';
 
-
     my @lib = keys %{$downloads->{mono_full}};
  
     foreach my $lib ( @lib ) {
@@ -271,7 +270,7 @@ sub extract_ser_full {
     unlink 'RunSummary.txt';
 
     my @lib = keys %{$downloads->{ser_full}};
-
+ 
     foreach my $lib ( @lib ) {
         my @zip = glob( $downloads->{ser_full}->{$lib} );
         my $zip = $zip[0];
@@ -308,7 +307,7 @@ sub extract_mono_delta {
     say "ftp: extracting monographs delta\n";
 
     my @key = keys %{$downloads->{mono_delta}};
-
+    
     foreach my $key ( @key ) {
         my $dir = $key .'_delta';
         mkdir $dir
