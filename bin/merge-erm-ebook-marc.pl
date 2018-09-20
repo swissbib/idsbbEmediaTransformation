@@ -287,7 +287,7 @@ EOD
 
 printf F ("Total records:%18.18s\n", pnum($stats->{total}));
 delete $stats->{total};
-foreach my $key (sort keys $stats ) {
+foreach my $key (sort keys %$stats ) {
     my $num = pnum($stats->{$key});
     printf F ("- with holdings %-6.6s%10.10s\n", $key, $num);
 }

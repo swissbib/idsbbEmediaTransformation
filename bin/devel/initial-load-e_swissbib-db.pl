@@ -48,6 +48,7 @@ table:  e_swissbib.emedia
 source: basel-bern-emedia.xml
 
 EOD
+
 @print "komplett neu aufbauen [j/N] ? ";
 my $ans = <STDIN>;
 exit unless $ans =~ /j/i;
