@@ -49,7 +49,7 @@ source: basel-bern-emedia.xml
 
 EOD
 
-@print "komplett neu aufbauen [j/N] ? ";
+print "komplett neu aufbauen [j/N] ? ";
 my $ans = <STDIN>;
 exit unless $ans =~ /j/i;
 
@@ -74,8 +74,8 @@ $dbh->do('truncate table emedia');
 my $today = strftime("%Y-%m-%d",localtime);
 while ( my $rec = $marc->next() ) {
     my $ssid = $rec->field('001')->data;
-    my($HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE);
-    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = $HolSFREE = 0;
+    my($HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE,$HolSBS,$HolSBE);
+    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = $HolSFREE = $HolSBS = $HolSBE = 0;
     foreach my $f ( $rec->field('949') ){
         my $sub = $f->subfield('b');
         if ( $sub eq 'A145' ) {
@@ -95,10 +95,14 @@ while ( my $rec = $marc->next() ) {
         my $sub = $f->subfield('b');
         if ( $sub eq 'FREE' ) {
             $HolSFREE=1;
+        } elsif ( $sub eq 'A145' ) {
+            $HolSBS=1;
+        } elsif ( $sub eq 'B405' ) {
+            $HolSBE=1;
         }
     }
     
-    my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE)|;
+    my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE,$HolSBS,$HolSBE,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)|;
     $dbh->do($sql);
     unless ( $pacif-- ) {
         $pacif = $PACIF;
