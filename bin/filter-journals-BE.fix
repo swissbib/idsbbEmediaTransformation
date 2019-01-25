@@ -1,0 +1,1 @@
+select marc_any_match('909f','(Central and Eastern European Online Library|JSTOR Business IV|JSTOR Ireland Collection|JSTOR Jewish Studies|JSTOR Lives of Literature|JSTOR Sustainability (journals only)|Business Source Ultimate|Education Research Complete|Underground and Independent Comics, Comix, and Graphic Novels: Volume 1)')
