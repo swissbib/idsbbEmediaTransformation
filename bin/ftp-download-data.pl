@@ -22,7 +22,7 @@ History
     2016.06.08  rewrite fuer merge und delta/ava
     2016.10.12  added FREE instance/ava
     2017.03.31  added support for OA-serials
-    2018.09.20  added support for serials
+    2018.09.20  added support for serials 
 
 Autor
     andres.vonarx@unibas.ch
@@ -72,6 +72,8 @@ my $downloads = {
         FREE => '3UB_360MARC_Update_mono_new_changed_deleted_files.zip',
         },
     ser_delta => {
+        SBE   => '1UB_360MARC_Update_ser_new_changed_deleted_files.zip',
+        SBS   => '2UB_360MARC_Update_ser_new_changed_deleted_files.zip',
         SFREE => '3UB_360MARC_Update_ser_new_changed_deleted_files.zip',
         },
 };
