@@ -9,15 +9,15 @@
 # history:
 #   02.03.2017/bmt: test fuer swissbib orange
 
-DO_DOWNLOAD=0
-DO_FILTER=0
-DO_MERGE=0
-DO_SYNC=0
+DO_DOWNLOAD=1
+DO_FILTER=1
+DO_MERGE=1
+DO_SYNC=1
 DO_DELTA=1
-DO_UPLOAD=0
-DO_SAVE=0
-DO_CLEANUP=0
-DO_EMAIL=0
+DO_UPLOAD=1
+DO_SAVE=1
+DO_CLEANUP=1
+DO_EMAIL=1
 
 DATE=`date +%Y%m%d`
 LINE='------------------------------------------------'
