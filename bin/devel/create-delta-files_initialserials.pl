@@ -11,7 +11,7 @@ create-delta-files_initialserials.pl
 =head1 DESCRIPTION
 
 This script creates MARCXML-records of all Serial records in the shadow
-database for the initial load of free serial records into Swissbib
+database for the initial load of serial records into Swissbib
 It does not write a deletion list.
 
 =head2 Data sources
@@ -88,7 +88,7 @@ use MARC::File::XML (BinaryEncoding => 'utf8', RecordFormat => 'MARC21' );
 binmode(STDOUT,":utf8");
 use strict;
 use utf8;
-use lib $FindBin::Bin;
+use lib '..';
 use e_swissbib_db;
 
 # ---------------------------
@@ -103,8 +103,8 @@ my @Sets = (
 # ---------------------------
 my $FULL_XML    = 'basel-bern-emedia.xml';
 my $DELTA_XML   = 'sersol-idsbb-emedia-initialserials.xml';
-my $DATA_DIR    = '/opt/data/e-books/data';
-my $DOWNLOAD_DIR= '/opt/data/e-books/download';
+my $DATA_DIR    = '/opt/data/e-books_test/data';
+my $DOWNLOAD_DIR= '/opt/data/e-books_test/download';
 #my $DATA_DIR    = '/opt/data/e-books/data';
 #my $DOWNLOAD_DIR= '/opt/data/e-books/download';
 
@@ -122,8 +122,8 @@ sub step_2_write_delta_xml {
     print "delta: writing updates xml\n";
     my $marcIn   = MARC::File::XML->in($FULL_XML);
     my $marcOut  = MARC::File::XML->out($DELTA_XML);
-    my $sth_query = $dbh->prepare(qq|select * from emedia where ssid=? and HolSFREE=1|);
-    my $sth_update= $dbh->prepare(qq|update emedia set MARC=1 where ssid=? and HolSFREE=1|);
+    my $sth_query = $dbh->prepare(qq|select * from emedia where ssid=? and (HolSBE=1 or HolSBS=1)|);
+    my $sth_update= $dbh->prepare(qq|update emedia set MARC=1 where ssid=? and (HolSBE=1 or HolSBS=1)|);
 
     while ( my $rec = $marcIn->next ) {
         my $id = $rec->field('001')->data;
