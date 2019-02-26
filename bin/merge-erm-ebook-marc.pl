@@ -66,6 +66,7 @@ basil.marti@unibas.ch
             - Interpunktion fixen zusaetzlich fuer Feld 264
  02.03.2017 Kopie fuer Tests
  09.03.2017 Erweiterung fuer FREE-ZS
+ 21.09.2018 Erweiterung fuer Berner und Basler ZS
  
 =cut
 
@@ -96,7 +97,9 @@ my @Sets = (
     'BS',       # BS.mrc
     'BE',       # BE.mrc
     'FREE',     # FREE.mrc
+    'SBE',      # SBE.mrc
     'EHB',      # EHB.mrc
+    'SBS',      # SBS.mrc
     'SFREE',    # SFREE.mrc
     'BBZ',      # BBZ.mrc
 );

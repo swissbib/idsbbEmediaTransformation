@@ -76,6 +76,7 @@ basil.marti@unibas.ch
  09.06.2016 beta / ava
  02.03.2017 Testversion / bmt
  09.03.2017 Erweiterung für freie E-Zeitschriften / bmt
+ 21.09.2018 Erweiterung für E-Zeitschriften / bmt
  
 =cut
 
@@ -107,12 +108,16 @@ my @Sets = (
     'BBZ',
     'EHB',
     'FREE',
+    'SBS',
+    'SBE',
     'SFREE',
 );
 
 my %Codes = (
     'BS'   => 'A145',
     'BE'   => 'B405',
+    'SBS'  => 'A145',
+    'SBE'  => 'B405',
     'BBZ'  => 'B406',
     'EHB'  => 'B407',
     'FREE' => 'FREE',

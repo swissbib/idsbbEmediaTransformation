@@ -10,6 +10,7 @@
 #   02.03.2017/bmt: test fuer swissbib orange
 
 DO_DOWNLOAD=1
+DO_FILTER=1
 DO_MERGE=1
 DO_SYNC=1
 DO_DELTA=1
@@ -53,6 +54,14 @@ if [ "$DO_DOWNLOAD" == "1" ]; then
     if [ "$?" !=  "0" ]; then
         exit;
     fi
+fi
+
+if [ "$DO_FILTER" == "1" ]; then
+    echo "* filter e-journal data" >> $LOG
+    catmandu convert MARC to MARC --fix $BINDIR/filter-journals-BS.fix < SBS.mrc > SBS_filter.mrc
+    catmandu convert MARC to MARC --fix $BINDIR/filter-journals-BE.fix < SBE.mrc > SBE_filter.mrc
+    mv SBS_filter.mrc SBS.mrc
+    mv SBE_filter.mrc SBE.mrc
 fi
 
 if [ "$DO_MERGE" == "1" ]; then

@@ -30,7 +30,8 @@ andres.vonarx@unibas.ch
 
  08.06.2016 beta / ava
  03.03.2017 Testversion / bmt
- 09.03.2017 Ergänzung für E-Zeitschriften
+ 09.03.2017 Ergänzung für OA-Zeitschriften
+ 21.09.2018 Ergänzung für Berner und Basler-Zeitschriften
  
 =cut
 
@@ -57,6 +58,8 @@ my @Sets = (
     'EHB',
     'FREE',
     'SFREE',
+    'SBS',
+    'SBE',
 );
 
 # ---------------------------

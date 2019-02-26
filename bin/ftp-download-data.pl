@@ -21,7 +21,8 @@ CAVEAT:
 History
     2016.06.08  rewrite fuer merge und delta/ava
     2016.10.12  added FREE instance/ava
-    2017.03.31  added support for serials
+    2017.03.31  added support for OA-serials
+    2018.09.20  added support for serials
 
 Autor
     andres.vonarx@unibas.ch
@@ -59,6 +60,8 @@ my $downloads = {
         FREE => '3UB_360MARC_Update_mono.zip',
         },
     ser_full => {
+        SBE    => '1UB_360MARC_Update_ser.zip',
+        SBS    => '2UB_360MARC_Update_ser.zip',
         SFREE  => '3UB_360MARC_Update_ser.zip',
         },
     mono_delta => {
@@ -163,7 +166,7 @@ sub ftp_download {
         $ftp->quit;
     }
 
-    foreach my $credentials ( $bs ) {
+    foreach my $credentials ( $be, $bs ) {
         my $ftp = Net::FTP->new( $ftp_host, Passive => 1)
             or die("cannot connect to $ftp_host. $@");
         $ftp->login(@$credentials)

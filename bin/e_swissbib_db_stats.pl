@@ -30,6 +30,8 @@ use e_swissbib_db;
 my @Sets = ( 
     'BS',
     'BE',
+    'SBS',
+    'SBE',
     'BBZ',
     'EHB',
     'FREE',
