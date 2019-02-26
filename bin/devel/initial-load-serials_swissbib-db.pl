@@ -68,28 +68,36 @@ if ( hostname eq 'ub-catmandu' ) {
 my $marc =  MARC::File::XML->in($XML);
 
 our $dbh;
-$dbh->do('truncate table emedia');
+
+# Existierende Tablle löschen
+#$dbh->do('truncate table emedia');
 
 my $today = strftime("%Y-%m-%d",localtime);
 while ( my $rec = $marc->next() ) {
     my $ssid = $rec->field('001')->data;
-    my($HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE);
-    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = $HolSFREE= 0;
-    foreach my $f ( $rec->field('852') ){
+    my($HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,$HolSFREE,$HolSBS,$HolSBE);
+    $HolBS = $HolBE = $HolBBZ = $HolEHB = $HolFREE = $HolSFREE = $HolSBS = $HolSBE = 0;
+    foreach my $f ( $rec->field('852') ) {
         my $sub = $f->subfield('b');
-        if ( $sub eq 'FREE' ) {
-            $HolSFREE=1;
-            my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE)|;
-            $dbh->do($sql);
-            unless ( $pacif-- ) {
-                $pacif = $PACIF;
-                print '.';
-            }
+        if ( $sub eq 'A145' ) {
+            $HolSBS=1;
+        } elsif ( $sub eq 'B405' ) {
+            $HolSBE=1;
         } else {
             print $ssid . "949 \$b = $sub: dieses Sigel kenne ich nicht!\n";
         }
     }
+
+    if ( $HolSBS==1 || $HolSBE==1 ) {
+        my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE,$HolSBS,$HolSBE,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)|;
+        $dbh->do($sql);
+        unless ( $pacif-- ) {
+           $pacif = $PACIF;
+           print '.';
+        }
+    }
 }
+
 $marc->close;
 $dbh->disconnect;
 
