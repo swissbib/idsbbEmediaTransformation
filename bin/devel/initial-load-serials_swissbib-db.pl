@@ -89,7 +89,12 @@ while ( my $rec = $marc->next() ) {
     }
 
     if ( $HolSBS==1 || $HolSBE==1 ) {
-        my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE,$HolSBS,$HolSBE,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)|;
+        my $sql = qq|INSERT INTO emedia VALUES ('$ssid',$HolBS,$HolBE,$HolBBZ,$HolEHB,$HolFREE,1,'$today',$HolSFREE,$HolSBS,$HolSBE,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL) 
+        ON DUPLICATE KEY UPDATE
+        modified = '$today',
+        HolSBE = '$HolSBE',
+        HolSBS = '$HolSBS';
+        |;
         $dbh->do($sql);
         unless ( $pacif-- ) {
            $pacif = $PACIF;

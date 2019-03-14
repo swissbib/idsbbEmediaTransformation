@@ -179,10 +179,10 @@ sub step_2_write_delta_xml {
         $sth_update->bind_param(1,$id);
         $sth_update->execute;
             
-        my @oldfields = $rec->field('949');
-        my @newfields;
+        my @oldfields_book = $rec->field('949');
+        my @newfields_book;
 
-        foreach my $field ( @oldfields ) {
+        foreach my $field ( @oldfields_book ) {
             foreach my $set (@Sets) {
                 my $sth_query_nel = $dbh->prepare(qq|select Nel$set from emedia where ssid=? and Hol$set=1|);
                 $sth_query_nel->bind_param(1,$id);
@@ -193,11 +193,31 @@ sub step_2_write_delta_xml {
                     $field->add_subfields( 'x' => ('NEL' . $Codes{$set} . $nel  )) if $nel;
                 }
             }
-            push(@newfields,$field);
+            push(@newfields_book,$field);
         }
 
-        $rec->delete_fields(@oldfields);
-        $rec->append_fields(@newfields);
+        $rec->delete_fields(@oldfields_book);
+        $rec->append_fields(@newfields_book);
+        
+        my @oldfields_journal = $rec->field('852');
+        my @newfields_journal;
+
+        foreach my $field ( @oldfields_journal ) {
+            foreach my $set (@Sets) {
+                my $sth_query_nel = $dbh->prepare(qq|select Nel$set from emedia where ssid=? and Hol$set=1|);
+                $sth_query_nel->bind_param(1,$id);
+                $sth_query_nel->execute;
+                my $nel = $sth_query_nel->fetchrow_array();
+            
+                if ($field->subfield( 'b' ) =~ /$Codes{$set}/) {
+                    $field->add_subfields( 'x' => ('NEL' . $Codes{$set} . $nel  )) if $nel;
+                }
+            }
+            push(@newfields_journal,$field);
+        }
+
+        $rec->delete_fields(@oldfields_journal);
+        $rec->append_fields(@newfields_journal);
         $marcOut->write($rec);
     }
 
