@@ -321,8 +321,9 @@ sub fix_interpunktion {
     foreach my $tag ( @RemoveTrailingPunct ) {
         my @fields = $rec->field($tag);
         foreach my $field ( @fields ) {
-            my @subfields = $field->subfields();
-            foreach my $subfield ( @subfields ) {
+            my @new_subfields;
+            my @old_subfields = $field->subfields();
+            foreach my $subfield ( @old_subfields ) {
                 my $subf_code = $subfield->[0];
                 my $subf_cont = $subfield->[1];
                 local $_ = $subf_cont;
@@ -339,10 +340,19 @@ sub fix_interpunktion {
                 s/[ \,\.:;\/]+$//;
                 # restore protected '.'
                 s/$ESC$/./;
-                if ( $_ ne $subf_cont ) {
-                    $field->update( $subf_code => $_ );
-                }
+                
+                push( @new_subfields, $subf_code, $_ );
+
             }
+
+            my $new_field = MARC::Field->new( 
+                $field->tag(),
+                $field->indicator(1),
+                $field->indicator(2),
+                @new_subfields
+            );
+            
+            $field->replace_with( $new_field );
         }
     }
 }
