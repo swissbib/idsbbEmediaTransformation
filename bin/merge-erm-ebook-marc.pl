@@ -67,6 +67,7 @@ basil.marti@unibas.ch
  02.03.2017 Kopie fuer Tests
  09.03.2017 Erweiterung fuer FREE-ZS
  21.09.2018 Erweiterung fuer Berner und Basler ZS
+ 26.07.2019 Erweiterung fuer Umgang mit 909 Feldern wenn die gleiche Aufnahme in der gleichen Instanz in mehreren Databases aktiv ist 
  
 =cut
 
@@ -155,15 +156,19 @@ for ( my $i = 1 ; $i <= $#Sets ; $i++ ) {
         my $id = $rec->field('001')->data;
         foreach my $tag ( @Merge ) {
             my @f = $rec->field($tag);
-            foreach my $f ( @f ) {
+            foreach my $f ( @f ) { 
                 push(@{$store->{$id}->{$set}},$f);
             }
         }
         # Records with one specific id may be part of different
         # packages (909f). We make sure that we output all packages.
-        my $f = $rec->field('909')->subfield('f');
-        if ( $f ) {
-            $packages->{$id}->{$f}=1;
+
+        my @fields909 = $rec->field('909');
+        foreach my $field909 ( @fields909 ) {
+            my $field909f = $field909->subfield('f');
+            if ( $field909f ) {
+                $packages->{$id}->{$field909f}=1;
+            }
         }
     }
     $marc->close;
