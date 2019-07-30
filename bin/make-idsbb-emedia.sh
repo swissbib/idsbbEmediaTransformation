@@ -75,6 +75,7 @@ if [ "$DO_MERGE" == "1" ]; then
 
     fi
     echo "* fix unicode" >> $LOG
+    sed -i 's// /g' tmp.xml
     perl $BINDIR/normalize_unicode.pl < tmp.xml > basel-bern-emedia.xml
     if [ "$?" !=  "0" ]; then
         exit;
