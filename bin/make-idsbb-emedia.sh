@@ -116,8 +116,8 @@ fi
 
 if [ "$DO_UPLOAD" == "1" ]; then
     echo "* upload data" >> $LOG
-	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./ &>> $LOG
-	scp sersol-idsbb-emedia-deletions.txt harvester@sb-ucoai1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./ &>> $LOG
+	scp sersol-idsbb-emedia-updates-reformatted.xml.gz harvester@sb-uingest1.swissbib.unibas.ch:/swissbib/harvesting/incomingSersol/./ &>> $LOG 
+	scp sersol-idsbb-emedia-deletions.txt harvester@sb-uingest1.swissbib.unibas.ch:/swissbib/harvesting/oaiDeletes/./ &>> $LOG
 fi
 
 if [ "$DO_SAVE" == "1" ]; then
